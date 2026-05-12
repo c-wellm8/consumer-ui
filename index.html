@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Wellmate — Taylor Jordan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans',sans-serif;background:#F4F7F6;color:#052C22;min-width:320px;}
+:root{
+  --wind:#0093BF;--pool:#00A386;--glow:#FAAE3C;
+  --shale:#052C22;--river:#4D545E;--mist:#D3DAE5;
+  --wind-10:#0093BF1A;--pool-10:#00A3861A;--glow-10:#FAAE3C1A;
+  --card:#ffffff;--surface:#f8fafa;
+  --radius:14px;--radius-sm:10px;
+}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--shale);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.logo{display:flex;align-items:center;gap:8px;}
+.cairn-mark{display:flex;align-items:flex-end;gap:2px;}
+.cm1{width:9px;height:17px;border-radius:9px 9px 6px 6px;background:var(--wind);transform:rotate(-8deg);margin-bottom:2px;}
+.cm2{width:8px;height:14px;border-radius:9px 9px 6px 6px;background:var(--pool);}
+.cm3{width:7px;height:10px;border-radius:6px;background:var(--glow);transform:rotate(5deg);margin-bottom:2px;}
+.wm-name .the{font-size:8px;opacity:.5;color:#fff;display:block;line-height:1;}
+.wm-name .wmate{font-family:'Noto Serif',serif;font-size:13px;font-weight:500;color:#fff;line-height:1;}
+.user-av{width:30px;height:30px;border-radius:50%;background:var(--pool);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0;}
+.accent-bar{height:3px;background:linear-gradient(90deg,var(--wind),var(--pool) 50%,var(--glow));}
+
+/* ── TAB NAV ── */
+.tab-nav{background:var(--card);border-bottom:.5px solid var(--mist);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:43px;z-index:99;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{padding:12px 20px;font-size:12px;font-weight:500;color:var(--river);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-family:'Noto Sans',sans-serif;flex-shrink:0;transition:color .15s;}
+.tab-btn.active{color:var(--pool);border-bottom-color:var(--pool);}
+.tab-content{display:none;padding:18px 18px 90px;max-width:820px;margin:0 auto;}
+.tab-content.active{display:block;}
+
+/* ── SHARED ── */
+.card{background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;}
+.card-lbl{font-size:9px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--river);margin-bottom:4px;display:block;}
+.card-title{font-family:'Noto Serif',serif;font-size:15px;font-weight:500;color:var(--shale);margin-bottom:14px;line-height:1.3;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.btn{font-family:'Noto Sans',sans-serif;cursor:pointer;font-size:11px;font-weight:500;border-radius:var(--radius-sm);padding:7px 14px;border:.5px solid;}
+.btn-pool{background:var(--pool-10);border-color:var(--pool);color:#006B55;}
+.btn-wind{background:var(--wind-10);border-color:var(--wind);color:#185FA5;}
+.btn-glow{background:var(--glow-10);border-color:var(--glow);color:#8A5A00;}
+.btn-full{width:100%;text-align:center;display:block;padding:9px;}
+.src{font-size:8px;padding:1px 4px;border-radius:4px;margin-left:3px;}
+.src-s{background:#E6F1FB;color:#185FA5;}
+.src-r{background:#F3EDF9;color:#5C3D8F;}
+.src-p{background:#E1F5EE;color:#006B55;}
+.divider{height:.5px;background:var(--mist);margin:14px 0;}
+
+/* ── GOAL BANNER ── */
+.goal-banner{background:var(--pool-10);border:.5px solid var(--pool);border-radius:var(--radius-sm);padding:12px 15px;margin-bottom:14px;}
+.goal-lbl{font-size:8px;font-weight:500;color:#006B55;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px;}
+.goal-txt{font-family:'Noto Serif',serif;font-size:12px;color:var(--shale);line-height:1.65;font-style:italic;}
+.goal-meta{font-size:9px;color:#006B55;margin-top:4px;}
+
+/* ── SAGE ── */
+.sage-bubble-row{display:flex;gap:9px;margin-bottom:10px;align-items:flex-start;}
+.sage-av{width:26px;height:26px;border-radius:50%;background:var(--pool-10);border:.5px solid var(--pool);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.sage-av-dot{width:9px;height:9px;border-radius:50%;background:var(--pool);}
+.sage-bubble{background:var(--surface);border:.5px solid var(--mist);border-radius:0 10px 10px 10px;padding:10px 13px;font-size:11px;color:var(--shale);line-height:1.65;max-width:88%;}
+.sage-bubble strong{font-weight:500;}
+.user-bubble-row{display:flex;justify-content:flex-end;margin-bottom:10px;}
+.user-bubble{background:var(--pool-10);border:.5px solid var(--pool);border-radius:10px 0 10px 10px;padding:10px 13px;font-size:11px;color:var(--shale);line-height:1.65;max-width:78%;}
+.sage-input-row{display:flex;gap:8px;align-items:center;padding-top:12px;border-top:.5px solid var(--mist);}
+.sage-input{flex:1;background:var(--surface);border:.5px solid var(--mist);border-radius:20px;padding:9px 14px;font-size:11px;color:var(--river);font-family:'Noto Sans',sans-serif;outline:none;}
+.sage-send{background:var(--pool);border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+.sage-arr{border-left:6px solid #fff;border-top:4px solid transparent;border-bottom:4px solid transparent;margin-left:2px;}
+
+/* ── TREE ── */
+.tree-section{display:flex;gap:20px;align-items:center;padding:4px 0 8px;}
+.tree-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.tree-stage-lbl{font-size:10px;font-weight:500;color:var(--pool);margin-top:6px;}
+.tree-caption{font-size:9px;color:var(--river);margin-top:2px;text-align:center;}
+.tree-right{flex:1;}
+.tree-stats{display:flex;gap:0;border:.5px solid var(--mist);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px;}
+.t-stat{flex:1;padding:10px 12px;text-align:center;border-right:.5px solid var(--mist);}
+.t-stat:last-child{border-right:none;}
+.t-stat-num{font-family:'Noto Serif',serif;font-size:20px;font-weight:500;color:var(--shale);line-height:1;}
+.t-stat-lbl{font-size:8px;color:var(--river);margin-top:2px;line-height:1.3;}
+.tree-next{background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:10px 12px;}
+.tree-next-lbl{font-size:9px;color:var(--river);margin-bottom:5px;}
+.tree-progress{height:5px;background:var(--mist);border-radius:3px;overflow:hidden;margin-bottom:4px;}
+.tree-progress-fill{height:5px;background:linear-gradient(90deg,var(--pool),var(--wind));border-radius:3px;width:68%;}
+.tree-progress-txt{font-size:9px;color:var(--pool);font-weight:500;}
+
+/* ── BEHAVIOR CHECKLIST ── */
+.behav-list{display:flex;flex-direction:column;gap:7px;margin-top:4px;}
+.behav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);cursor:pointer;transition:background .1s;}
+.behav-item.done{background:var(--pool-10);border-color:var(--pool);}
+.behav-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--mist);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.behav-item.done .behav-check{background:var(--pool);border-color:var(--pool);}
+.behav-check-inner{width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:none;}
+.behav-item.done .behav-check-inner{display:block;}
+.behav-text{font-size:11px;color:var(--shale);flex:1;}
+.behav-item.done .behav-text{color:var(--river);}
+.behav-domain{font-size:9px;font-weight:500;padding:2px 7px;border-radius:8px;}
+
+/* ── GROWTH MAP ── */
+.gm-overview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.gm-mini-card{background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer;transition:border-color .15s;}
+.gm-mini-card:hover{border-color:var(--pool);}
+.gm-mini-card.active{border-color:var(--pool);background:var(--pool-10);}
+.gm-mc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.gm-mc-name{font-size:11px;font-weight:500;color:var(--shale);}
+.gm-mc-state{font-size:9px;display:flex;align-items:center;gap:3px;}
+.gm-sdot{width:5px;height:5px;border-radius:50%;}
+.gm-track{height:5px;background:var(--mist);border-radius:3px;position:relative;margin-bottom:6px;}
+.gm-fill{height:5px;border-radius:3px;}
+.gm-needle{position:absolute;top:-4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.1);transform:translateX(-50%);}
+.gm-scale{display:flex;justify-content:space-between;}
+.gm-scale span{font-size:7px;font-weight:500;}
+
+/* range bar */
+.range-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.range-lbl{font-size:7px;color:var(--river);}
+.range-bar{position:relative;width:52px;height:6px;background:var(--mist);border-radius:3px;}
+.range-fill{position:absolute;top:0;height:6px;border-radius:3px;opacity:.28;}
+.range-mid{position:absolute;top:-3px;width:2px;height:12px;background:rgba(5,44,34,.22);border-radius:1px;transform:translateX(-50%);}
+.range-dot{position:absolute;top:-4px;width:14px;height:14px;border-radius:50%;border:2.5px solid var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.12);transform:translateX(-50%);}
+.range-dir{font-size:7px;text-align:right;}
+
+/* domain detail */
+.domain-detail{background:var(--card);border:.5px solid var(--pool);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;}
+.dd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.dd-title{font-size:13px;font-weight:500;color:var(--shale);}
+.dd-rows{display:flex;flex-direction:column;gap:6px;}
+.dd-row{display:flex;justify-content:space-between;align-items:center;}
+.dd-lbl{font-size:10px;color:var(--river);}
+.dd-val{font-size:10px;font-weight:500;color:var(--shale);}
+
+/* ── REFLECTION CAIRN ── */
+.cairn-prompt{background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;}
+.cairn-q{font-family:'Noto Serif',serif;font-size:13px;color:var(--shale);line-height:1.75;font-style:italic;}
+.cairn-meta{font-size:9px;color:var(--river);margin-top:7px;}
+.cairn-response{width:100%;background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:12px 14px;font-size:11px;font-family:'Noto Serif',serif;color:var(--shale);line-height:1.7;resize:none;outline:none;min-height:80px;}
+.cairn-response:focus{border-color:var(--pool);}
+.cairn-actions{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.cairn-tip{font-size:9px;color:var(--river);}
+
+.agency-section{margin-bottom:14px;}
+.agency-lbl{font-size:10px;color:var(--river);margin-bottom:6px;}
+.agency-row{display:flex;align-items:center;gap:10px;}
+.agency-track{flex:1;height:5px;background:var(--mist);border-radius:3px;position:relative;}
+.agency-fill{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--glow),var(--pool));}
+.agency-node{position:absolute;top:-5px;width:15px;height:15px;border-radius:50%;border:2.5px solid var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.1);transform:translateX(-50%);}
+.agency-val{font-size:10px;font-weight:500;width:55px;text-align:right;}
+
+.wkyg-list{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+.wkyg-item{display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);}
+.wkyg-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.wkyg-text{font-size:11px;color:var(--shale);line-height:1.4;font-weight:500;}
+.wkyg-sub{font-size:9px;color:var(--river);margin-top:2px;}
+.wkyg-rank{margin-left:auto;font-size:9px;font-weight:500;color:var(--river);flex-shrink:0;}
+
+.past-reflections{display:flex;flex-direction:column;gap:8px;}
+.pr-item{padding:11px 14px;background:var(--surface);border:.5px solid var(--mist);border-radius:var(--radius-sm);}
+.pr-q{font-size:10px;color:var(--river);margin-bottom:3px;font-style:italic;}
+.pr-a{font-size:10px;color:var(--shale);line-height:1.5;}
+.pr-date{font-size:9px;color:var(--river);margin-top:4px;}
+
+/* ── CARE TAB ── */
+.care-section{margin-bottom:22px;}
+.care-lbl{font-size:9px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;color:var(--river);padding-bottom:8px;border-bottom:.5px solid var(--mist);margin-bottom:12px;display:block;}
+
+/* Insights from providers */
+.insight-card{background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius);padding:15px 17px;margin-bottom:10px;}
+.insight-card.highlight{border-color:var(--pool);background:#00A3860A;}
+.insight-card.flag{border-color:var(--glow);background:#FAAE3C08;}
+.insight-from{font-size:9px;color:var(--river);margin-bottom:6px;}
+.insight-from strong{color:var(--shale);font-weight:500;}
+.insight-body{font-size:11px;color:var(--shale);line-height:1.65;margin-bottom:11px;font-style:italic;}
+.insight-action{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.insight-label{font-size:12px;font-weight:500;color:var(--shale);}
+.insight-sub{font-size:10px;color:var(--river);margin-top:2px;}
+
+/* Provider cards */
+.provider-list{display:flex;flex-direction:column;gap:9px;}
+.prov-card{background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:13px 15px;display:flex;align-items:center;gap:12px;}
+.prov-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#fff;flex-shrink:0;}
+.prov-name{font-size:12px;font-weight:500;color:var(--shale);}
+.prov-role{font-size:10px;color:var(--river);margin-top:1px;}
+.prov-last{font-size:9px;color:var(--river);margin-top:4px;}
+.prov-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.prov-badge{font-size:9px;font-weight:500;padding:3px 9px;border-radius:9px;}
+.prov-badge.active{background:var(--pool-10);color:#006B55;border:.5px solid var(--pool);}
+.prov-badge.flag{background:var(--glow-10);color:#8A5A00;border:.5px solid var(--glow);}
+.prov-msg{font-size:9px;color:var(--wind);cursor:pointer;}
+
+/* Appointments */
+.appt-list{display:flex;flex-direction:column;gap:9px;}
+.appt-card{background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:13px 15px;display:flex;gap:14px;align-items:flex-start;}
+.appt-date-block{text-align:center;flex-shrink:0;width:38px;}
+.appt-month{font-size:8px;text-transform:uppercase;letter-spacing:.06em;color:var(--river);}
+.appt-day{font-family:'Noto Serif',serif;font-size:24px;font-weight:500;color:var(--shale);line-height:1.05;}
+.appt-body{flex:1;}
+.appt-name{font-size:12px;font-weight:500;color:var(--shale);}
+.appt-who{font-size:10px;color:var(--river);margin-top:1px;}
+.appt-time{font-size:10px;color:var(--pool);margin-top:4px;font-weight:500;}
+.appt-type{font-size:9px;color:var(--river);margin-top:1px;}
+.appt-actions{display:flex;gap:7px;margin-top:9px;}
+.appt-btn{font-size:9px;font-weight:500;padding:5px 11px;border-radius:8px;cursor:pointer;font-family:'Noto Sans',sans-serif;border:.5px solid;}
+.appt-btn.pool{color:#006B55;background:var(--pool-10);border-color:var(--pool);}
+.appt-btn.neutral{color:var(--river);background:var(--surface);border-color:var(--mist);}
+
+/* Provider search */
+.search-bar{display:flex;gap:9px;align-items:center;background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:10px;}
+.search-icon{width:13px;height:13px;border-radius:50%;border:2px solid var(--river);flex-shrink:0;position:relative;}
+.search-icon::after{content:'';position:absolute;bottom:-4px;right:-4px;width:5px;height:2px;background:var(--river);border-radius:1px;transform:rotate(45deg);}
+.search-input{flex:1;border:none;background:none;font-size:12px;color:var(--shale);font-family:'Noto Sans',sans-serif;outline:none;}
+.search-input::placeholder{color:var(--river);}
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.fchip{font-size:10px;font-weight:500;padding:5px 11px;border-radius:10px;border:.5px solid;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.fchip.pool{background:var(--pool-10);border-color:var(--pool);color:#006B55;}
+.fchip.wind{background:var(--wind-10);border-color:var(--wind);color:#185FA5;}
+.fchip.muted{background:var(--surface);border-color:var(--mist);color:var(--river);}
+
+.ref-card{background:var(--card);border:.5px solid var(--mist);border-radius:var(--radius);padding:15px 17px;margin-bottom:11px;position:relative;}
+.ref-card.best{border-color:var(--pool);background:#00A3860A;}
+.ref-best-tag{position:absolute;top:-1px;right:14px;font-size:8px;font-weight:500;color:#fff;background:var(--pool);padding:3px 9px;border-radius:0 0 7px 7px;}
+.ref-name{font-family:'Noto Serif',serif;font-size:13px;font-weight:500;color:var(--shale);margin-bottom:2px;}
+.ref-spec{font-size:10px;color:var(--river);margin-bottom:10px;}
+.ref-meta-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
+.ref-badge{font-size:9px;font-weight:500;padding:2px 8px;border-radius:8px;}
+.ref-badge.acc{background:var(--pool-10);color:#006B55;border:.5px solid var(--pool);}
+.ref-badge.dist{background:var(--surface);color:var(--river);border:.5px solid var(--mist);}
+.ref-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.ref-tag{font-size:9px;padding:3px 8px;border-radius:8px;background:var(--surface);border:.5px solid var(--mist);color:var(--river);}
+.ref-why{border-top:.5px solid var(--mist);padding-top:10px;}
+.ref-why-lbl{font-size:9px;font-weight:500;color:var(--river);margin-bottom:5px;}
+.ref-why-row{display:flex;gap:6px;font-size:10px;color:var(--shale);margin-bottom:4px;line-height:1.4;}
+.ref-why-dot{width:5px;height:5px;border-radius:50%;background:var(--pool);flex-shrink:0;margin-top:4px;}
+.ref-btn{width:100%;background:var(--pool-10);border:.5px solid var(--pool);color:#006B55;border-radius:var(--radius-sm);padding:9px;font-size:10px;font-weight:500;cursor:pointer;font-family:'Noto Sans',sans-serif;margin-top:11px;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="cairn-mark"><div class="cm1"></div><div class="cm2"></div><div class="cm3"></div></div>
+    <div class="wm-name"><span class="the">The</span><span class="wmate">Wellmate™</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:9px;">
+    <span style="font-size:10px;color:rgba(255,255,255,.4);">Good morning</span>
+    <div class="user-av">TJ</div>
+  </div>
+</div>
+<div class="accent-bar"></div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('today',this)">Today</button>
+  <button class="tab-btn" onclick="switchTab('grow',this)">Growth Map</button>
+  <button class="tab-btn" onclick="switchTab('reflect',this)">Reflect</button>
+  <button class="tab-btn" onclick="switchTab('care',this)">Care</button>
+</nav>
+
+<!-- ════════════════════════════════════════
+     TAB 1 · TODAY
+════════════════════════════════════════ -->
+<div id="tab-today" class="tab-content active">
+
+  <!-- What matters to you -->
+  <div class="goal-banner">
+    <div>
+      <div class="goal-lbl">What matters to you</div>
+      <div class="goal-txt">"I want to feel energized throughout my day and be present for my family in the evenings."</div>
+      <div class="goal-meta">Reported via Sage · Updated 3 days ago</div>
+    </div>
+  </div>
+
+  <!-- Sage check-in -->
+  <div class="card">
+    <span class="card-lbl">Sage · daily check-in</span>
+    <div class="card-title">How are you doing today?</div>
+    <div class="sage-bubble-row">
+      <div class="sage-av"><div class="sage-av-dot"></div></div>
+      <div class="sage-bubble">Hi Taylor — yesterday you mentioned feeling tired around 3pm and skipping your afternoon walk. <strong>How did the evening go?</strong> Were you able to be present at dinner with your family?</div>
+    </div>
+    <div class="user-bubble-row">
+      <div class="user-bubble">Actually yes — I skipped the afternoon snack and felt way less foggy. Dinner was really good.</div>
+    </div>
+    <div class="sage-bubble-row">
+      <div class="sage-av"><div class="sage-av-dot"></div></div>
+      <div class="sage-bubble">That's a real connection — <strong>skipping the high-carb snack reduced your blood sugar spike</strong>, which is likely what was causing the crash. Your dietitian mentioned this might help. Want to make it a behavior this week?</div>
+    </div>
+    <div class="sage-input-row">
+      <input class="sage-input" type="text" placeholder="Reply to Sage…"/>
+      <button class="sage-send"><div class="sage-arr"></div></button>
+    </div>
+  </div>
+
+  <!-- Tree + stats -->
+  <div class="two-col">
+    <div class="card" style="margin-bottom:0;">
+      <span class="card-lbl">Your Wellmate Tree™</span>
+      <div class="tree-section" style="flex-direction:column;align-items:center;gap:6px;padding:0;">
+        <!-- Tree SVG — young but leafy sapling -->
+        <svg width="130" height="150" viewBox="0 0 130 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Trunk -->
+          <rect x="59" y="100" width="12" height="38" rx="6" fill="#8B6343"/>
+          <rect x="62" y="88" width="6" height="22" rx="3" fill="#A0754F"/>
+          <!-- Roots -->
+          <path d="M65 138 Q55 142 48 140" stroke="#8B6343" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path d="M65 138 Q75 142 82 140" stroke="#8B6343" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <!-- Main canopy layers -->
+          <ellipse cx="65" cy="82" rx="30" ry="22" fill="#00A386" opacity=".9"/>
+          <ellipse cx="65" cy="68" rx="24" ry="18" fill="#00B896" opacity=".85"/>
+          <ellipse cx="65" cy="56" rx="18" ry="14" fill="#00C9A5" opacity=".8"/>
+          <!-- Side clusters -->
+          <ellipse cx="42" cy="78" rx="14" ry="12" fill="#009B7C" opacity=".75"/>
+          <ellipse cx="88" cy="78" rx="14" ry="12" fill="#009B7C" opacity=".75"/>
+          <ellipse cx="50" cy="62" rx="11" ry="9" fill="#00B896" opacity=".7"/>
+          <ellipse cx="80" cy="62" rx="11" ry="9" fill="#00B896" opacity=".7"/>
+          <!-- Highlight -->
+          <ellipse cx="58" cy="52" rx="7" ry="5" fill="#4DD9B8" opacity=".4"/>
+          <!-- A few leaves accents -->
+          <ellipse cx="46" cy="56" rx="5" ry="4" fill="#00C9A5" opacity=".6"/>
+          <ellipse cx="84" cy="56" rx="5" ry="4" fill="#00C9A5" opacity=".6"/>
+          <!-- Small flowers/blooms -->
+          <circle cx="55" cy="48" r="4" fill="#FAAE3C" opacity=".85"/>
+          <circle cx="72" cy="44" r="3.5" fill="#FAAE3C" opacity=".75"/>
+          <circle cx="84" cy="72" r="3" fill="#0093BF" opacity=".7"/>
+        </svg>
+        <div class="tree-stage-lbl">Young &amp; growing</div>
+        <div class="tree-caption">Healthy behaviors feed your tree</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:0;">
+      <span class="card-lbl">Your momentum</span>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+        <div style="text-align:center;padding:10px 0;border-bottom:.5px solid var(--mist);">
+          <div class="t-stat-num" style="font-family:'Noto Serif',serif;font-size:28px;font-weight:500;color:var(--shale);">11</div>
+          <div class="t-stat-lbl" style="font-size:9px;color:var(--river);margin-top:2px;">day check-in streak</div>
+        </div>
+        <div style="text-align:center;padding:10px 0;border-bottom:.5px solid var(--mist);">
+          <div class="t-stat-num" style="font-family:'Noto Serif',serif;font-size:28px;font-weight:500;color:var(--pool);">52</div>
+          <div class="t-stat-lbl" style="font-size:9px;color:var(--river);margin-top:2px;">of 92 behaviors active</div>
+        </div>
+        <div style="padding:4px 0;">
+          <div style="font-size:9px;color:var(--river);margin-bottom:5px;">Next tree stage in</div>
+          <div class="tree-progress"><div class="tree-progress-fill"></div></div>
+          <div class="tree-progress-txt">68% there · 8 more active behaviors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's behaviors -->
+  <div class="card" style="margin-top:14px;">
+    <span class="card-lbl">Today's healthy behaviors</span>
+    <div class="card-title">3 of 6 done</div>
+    <div class="behav-list">
+      <div class="behav-item done" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">Skip afternoon high-carb snack</span>
+        <span class="behav-domain" style="background:var(--pool-10);color:#006B55;">Lifestyle</span>
+      </div>
+      <div class="behav-item done" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">Take Lisinopril 10mg</span>
+        <span class="behav-domain" style="background:var(--pool-10);color:#006B55;">Medical</span>
+      </div>
+      <div class="behav-item done" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">Eat vegetables with lunch</span>
+        <span class="behav-domain" style="background:var(--pool-10);color:#006B55;">Lifestyle</span>
+      </div>
+      <div class="behav-item" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">15-minute walk after dinner</span>
+        <span class="behav-domain" style="background:var(--wind-10);color:#185FA5;">Movement</span>
+      </div>
+      <div class="behav-item" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">5-minute stress release before bed</span>
+        <span class="behav-domain" style="background:var(--glow-10);color:#8A5A00;">Mind</span>
+      </div>
+      <div class="behav-item" onclick="toggleBehav(this)">
+        <div class="behav-check"><div class="behav-check-inner"></div></div>
+        <span class="behav-text">Reflect on today's energy levels</span>
+        <span class="behav-domain" style="background:#F3EDF9;color:#5C3D8F;">Reflection</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-today -->
+
+
+<!-- ════════════════════════════════════════
+     TAB 2 · GROWTH MAP
+════════════════════════════════════════ -->
+<div id="tab-grow" class="tab-content">
+
+  <div class="card">
+    <span class="card-lbl">Wellmate Growth Map™</span>
+    <div class="card-title">Taylor's whole health view</div>
+    <div class="gm-overview">
+
+      <!-- Mind & Purpose -->
+      <div class="gm-mini-card active" onclick="showDomain('mind',this)">
+        <div class="gm-mc-head">
+          <div>
+            <div class="gm-mc-name">Mind &amp; purpose</div>
+            <div class="gm-mc-state"><div class="gm-sdot" style="background:var(--wind)"></div><span style="color:#185FA5;">Strengthening</span></div>
+          </div>
+          <div class="range-wrap">
+            <div class="range-lbl">vs. peers</div>
+            <div class="range-bar">
+              <div class="range-fill" style="left:15%;width:70%;background:var(--wind)"></div>
+              <div class="range-mid" style="left:50%"></div>
+              <div class="range-dot" style="left:62%;background:var(--wind)"></div>
+            </div>
+            <div class="range-dir" style="color:#185FA5;">↑ above median</div>
+          </div>
+        </div>
+        <div class="gm-track"><div class="gm-fill" style="width:62%;background:var(--wind)"></div><div class="gm-needle" style="left:62%;background:var(--wind)"></div></div>
+        <div class="gm-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Strengthen</span><span style="color:var(--pool)">Sustain</span></div>
+      </div>
+
+      <!-- Medical Care -->
+      <div class="gm-mini-card" onclick="showDomain('medical',this)">
+        <div class="gm-mc-head">
+          <div>
+            <div class="gm-mc-name">Medical care</div>
+            <div class="gm-mc-state"><div class="gm-sdot" style="background:var(--glow)"></div><span style="color:#8A5A00;">Building</span></div>
+          </div>
+          <div class="range-wrap">
+            <div class="range-lbl">vs. peers</div>
+            <div class="range-bar">
+              <div class="range-fill" style="left:15%;width:70%;background:var(--glow)"></div>
+              <div class="range-mid" style="left:50%"></div>
+              <div class="range-dot" style="left:38%;background:var(--glow)"></div>
+            </div>
+            <div class="range-dir" style="color:#8A5A00;">↓ below median</div>
+          </div>
+        </div>
+        <div class="gm-track"><div class="gm-fill" style="width:38%;background:var(--glow)"></div><div class="gm-needle" style="left:38%;background:var(--glow)"></div></div>
+        <div class="gm-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Strengthen</span><span style="color:var(--pool)">Sustain</span></div>
+      </div>
+
+      <!-- Relationships -->
+      <div class="gm-mini-card" onclick="showDomain('relationships',this)">
+        <div class="gm-mc-head">
+          <div>
+            <div class="gm-mc-name">Relationships &amp; env.</div>
+            <div class="gm-mc-state"><div class="gm-sdot" style="background:var(--pool)"></div><span style="color:#006B55;">Sustaining</span></div>
+          </div>
+          <div class="range-wrap">
+            <div class="range-lbl">vs. peers</div>
+            <div class="range-bar">
+              <div class="range-fill" style="left:15%;width:70%;background:var(--pool)"></div>
+              <div class="range-mid" style="left:50%"></div>
+              <div class="range-dot" style="left:76%;background:var(--pool)"></div>
+            </div>
+            <div class="range-dir" style="color:#006B55;">↑↑ well above</div>
+          </div>
+        </div>
+        <div class="gm-track"><div class="gm-fill" style="width:78%;background:var(--pool)"></div><div class="gm-needle" style="left:78%;background:var(--pool)"></div></div>
+        <div class="gm-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Strengthen</span><span style="color:var(--pool)">Sustain</span></div>
+      </div>
+
+      <!-- Lifestyle -->
+      <div class="gm-mini-card" onclick="showDomain('lifestyle',this)">
+        <div class="gm-mc-head">
+          <div>
+            <div class="gm-mc-name">Lifestyle</div>
+            <div class="gm-mc-state"><div class="gm-sdot" style="background:var(--wind)"></div><span style="color:#185FA5;">Strengthening</span></div>
+          </div>
+          <div class="range-wrap">
+            <div class="range-lbl">vs. peers</div>
+            <div class="range-bar">
+              <div class="range-fill" style="left:15%;width:70%;background:var(--wind)"></div>
+              <div class="range-mid" style="left:50%"></div>
+              <div class="range-dot" style="left:50%;background:var(--wind)"></div>
+            </div>
+            <div class="range-dir" style="color:#185FA5;">≈ near median</div>
+          </div>
+        </div>
+        <div class="gm-track"><div class="gm-fill" style="width:51%;background:var(--wind)"></div><div class="gm-needle" style="left:51%;background:var(--wind)"></div></div>
+        <div class="gm-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Strengthen</span><span style="color:var(--pool)">Sustain</span></div>
+      </div>
+
+    </div><!-- /gm-overview -->
+  </div><!-- /card -->
+
+  <!-- Domain detail (swaps on click) -->
+  <div id="domain-detail" class="domain-detail">
+    <div class="dd-head">
+      <span class="dd-title" id="dd-title">Mind &amp; purpose</span>
+      <span style="font-size:9px;color:var(--river);">Tap any domain above to explore</span>
+    </div>
+    <div class="dd-rows" id="dd-rows">
+      <div class="dd-row"><span class="dd-lbl">Stress (Sage)</span><span class="dd-val">Moderate<span class="src src-s">Sage</span></span></div>
+      <div class="dd-row"><span class="dd-lbl">Sense of agency</span><span class="dd-val">Growing<span class="src src-r">Reflection</span></span></div>
+      <div class="dd-row"><span class="dd-lbl">Purpose clarity</span><span class="dd-val">High<span class="src src-r">Reflection</span></span></div>
+      <div class="dd-row"><span class="dd-lbl">Sleep quality</span><span class="dd-val">6–7 hrs, disrupted<span class="src src-s">Sage</span></span></div>
+      <div class="dd-row"><span class="dd-lbl">PHQ-9 score</span><span class="dd-val">7 — mild<span class="src src-s">Sage</span></span></div>
+    </div>
+  </div>
+
+  <!-- Why Taylor is here -->
+  <div class="card">
+    <span class="card-lbl">Why you're here</span>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+      <div style="display:flex;gap:8px;font-size:11px;color:var(--shale);line-height:1.5;"><div style="width:5px;height:5px;border-radius:50%;background:var(--pool);flex-shrink:0;margin-top:5px;"></div>Recently diagnosed as prediabetic — wants to reverse course before T2D progression.</div>
+      <div style="display:flex;gap:8px;font-size:11px;color:var(--shale);line-height:1.5;"><div style="width:5px;height:5px;border-radius:50%;background:var(--wind);flex-shrink:0;margin-top:5px;"></div>Afternoon energy crashes affecting work performance and family presence.</div>
+      <div style="display:flex;gap:8px;font-size:11px;color:var(--shale);line-height:1.5;"><div style="width:5px;height:5px;border-radius:50%;background:var(--glow);flex-shrink:0;margin-top:5px;"></div>Lower back pain limiting exercise, creating a compounding cycle.</div>
+    </div>
+  </div>
+
+</div><!-- /tab-grow -->
+
+
+<!-- ════════════════════════════════════════
+     TAB 3 · REFLECT
+════════════════════════════════════════ -->
+<div id="tab-reflect" class="tab-content">
+
+  <!-- Reflection Cairn -->
+  <div class="card">
+    <span class="card-lbl">Reflection Cairn</span>
+    <div class="card-title">Today's prompt</div>
+    <div class="cairn-prompt">
+      <div class="cairn-q">"What would feeling truly energized let you do this week that you can't do right now?"</div>
+      <div class="cairn-meta">Prompt 12 of 30 · Takes ~2 minutes · Part of your Mind &amp; Purpose domain</div>
+    </div>
+    <textarea class="cairn-response" placeholder="Take your time — this is just for you…"></textarea>
+    <div class="cairn-actions">
+      <span class="cairn-tip">Your response is private unless you choose to share it with your care team.</span>
+      <button class="btn btn-pool">Save reflection</button>
+    </div>
+  </div>
+
+  <!-- Sense of agency -->
+  <div class="card">
+    <span class="card-lbl">Sense of agency</span>
+    <div class="card-title">How in control do you feel?</div>
+    <div class="agency-section">
+      <div class="agency-lbl">Your agency score has grown over the last 4 weeks</div>
+      <div class="agency-row">
+        <div class="agency-track">
+          <div class="agency-fill" style="width:70%"></div>
+          <div class="agency-node" style="left:70%;background:var(--pool)"></div>
+        </div>
+        <div class="agency-val" style="color:var(--pool);">Growing</div>
+      </div>
+    </div>
+    <div class="divider" style="margin:10px 0 12px;"></div>
+    <div style="font-size:11px;color:var(--river);line-height:1.6;">Sage has noticed you're <strong style="color:var(--shale);font-weight:500;">connecting your daily choices to your evening goal</strong> more consistently — this is a key driver of your agency growth.</div>
+  </div>
+
+  <!-- What Keeps You Going -->
+  <div class="card">
+    <span class="card-lbl">What Keeps You Going</span>
+    <div class="card-title">Your motivations</div>
+    <div class="wkyg-list">
+      <div class="wkyg-item">
+        <div class="wkyg-icon" style="background:var(--pool-10);border:.5px solid var(--pool);">🏡</div>
+        <div style="flex:1;">
+          <div class="wkyg-text">Being present for family dinners</div>
+          <div class="wkyg-sub">Your #1 stated reason · strongest pull</div>
+        </div>
+        <div class="wkyg-rank">#1</div>
+      </div>
+      <div class="wkyg-item">
+        <div class="wkyg-icon" style="background:var(--wind-10);border:.5px solid var(--wind);">⚡</div>
+        <div style="flex:1;">
+          <div class="wkyg-text">Sustainable energy through the workday</div>
+          <div class="wkyg-sub">Tied to afternoon crash pattern</div>
+        </div>
+        <div class="wkyg-rank">#2</div>
+      </div>
+      <div class="wkyg-item">
+        <div class="wkyg-icon" style="background:var(--glow-10);border:.5px solid var(--glow);">🔄</div>
+        <div style="flex:1;">
+          <div class="wkyg-text">Reversing prediabetes before it progresses</div>
+          <div class="wkyg-sub">Medical goal · connected to all domains</div>
+        </div>
+        <div class="wkyg-rank">#3</div>
+      </div>
+    </div>
+    <button class="btn btn-pool btn-full">Add or edit motivations</button>
+  </div>
+
+  <!-- Past reflections -->
+  <div class="card">
+    <span class="card-lbl">Past reflections</span>
+    <div class="card-title">Your recent entries</div>
+    <div class="past-reflections">
+      <div class="pr-item">
+        <div class="pr-q">"When do you feel most like yourself?"</div>
+        <div class="pr-a">"In the mornings before everyone wakes up, and at the dinner table when we're all laughing."</div>
+        <div class="pr-date">May 8, 2026</div>
+      </div>
+      <div class="pr-item">
+        <div class="pr-q">"What's one small thing that went well today?"</div>
+        <div class="pr-a">"I chose water instead of soda at lunch. It felt small but I noticed it."</div>
+        <div class="pr-date">May 6, 2026</div>
+      </div>
+      <div class="pr-item">
+        <div class="pr-q">"What gets in the way of the health you want?"</div>
+        <div class="pr-a">"Work stress spills into everything. When I'm anxious I eat badly and then feel worse."</div>
+        <div class="pr-date">May 3, 2026</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /tab-reflect -->
+
+
+<!-- ════════════════════════════════════════
+     TAB 4 · CARE
+════════════════════════════════════════ -->
+<div id="tab-care" class="tab-content">
+
+  <!-- Insights from care team -->
+  <div class="care-section">
+    <span class="care-lbl">Insights from your care team</span>
+
+    <div class="insight-card highlight">
+      <div class="insight-from">From <strong>Dr. Amara Osei</strong> · PCP · shared via Wellmate</div>
+      <div class="insight-body">"Taylor's family dinners are her strongest asset. Involving her family in building blood sugar–friendly meals connects her prediabetes reversal directly to what matters most to her."</div>
+      <div class="insight-action">
+        <div>
+          <div class="insight-label">Refer to a metabolic dietitian</div>
+          <div class="insight-sub">2 specialists nearby who work with prediabetes &amp; family meal planning</div>
+        </div>
+        <button class="btn btn-pool" style="flex-shrink:0;">See matches →</button>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-from">From <strong>Dr. Amara Osei</strong> · PCP · shared via Wellmate</div>
+      <div class="insight-body">"Taylor's afternoon crashes are driven by two compounding causes — blood sugar instability and work stress. A CGM would help her see the blood sugar piece clearly."</div>
+      <div class="insight-action">
+        <div>
+          <div class="insight-label">Discuss a CGM trial</div>
+          <div class="insight-sub">Prediabetes HbA1c 6.2% — CGM use is clinically appropriate</div>
+        </div>
+        <button class="btn btn-wind" style="flex-shrink:0;">Ask Sage →</button>
+      </div>
+    </div>
+
+    <div class="insight-card flag">
+      <div class="insight-from">From <strong>Dr. James Kim</strong> · Endocrinology · flagged Apr 28</div>
+      <div class="insight-body">"Endocrinology flagged weight gain. In the context of prediabetes, coordinating now rather than separately prevents receiving fragmented advice about the same issue from two providers."</div>
+      <div class="insight-action">
+        <div>
+          <div class="insight-label">Care team is coordinating</div>
+          <div class="insight-sub">Dr. Osei &amp; Dr. Kim aligning before your next visit</div>
+        </div>
+        <button class="btn btn-glow" style="flex-shrink:0;">View update</button>
+      </div>
+    </div>
+
+    <div class="insight-card">
+      <div class="insight-from">From <strong>Priya Mehta, LCSW</strong> · Behavioral health · May 1, 2026</div>
+      <div class="insight-body">"Anxiety stable — no pharmacotherapy needed at this time. CBT weekly, good engagement and resilience building. Work demands tied directly to Taylor's energy and family presence goals."</div>
+      <div class="insight-action">
+        <div>
+          <div class="insight-label">Key points from your session</div>
+          <div class="insight-sub">Follow-up in 2 weeks · No safety concerns</div>
+        </div>
+        <button class="btn btn-pool" style="flex-shrink:0;">View notes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- My providers -->
+  <div class="care-section">
+    <span class="care-lbl">My care team</span>
+    <div class="provider-list">
+      <div class="prov-card">
+        <div class="prov-av" style="background:#006B55;">AO</div>
+        <div>
+          <div class="prov-name">Dr. Amara Osei</div>
+          <div class="prov-role">Primary Care Physician · PCP</div>
+          <div class="prov-last">Last visit: Apr 30, 2026</div>
+        </div>
+        <div class="prov-right">
+          <span class="prov-badge active">Active</span>
+          <span class="prov-msg">Message</span>
+        </div>
+      </div>
+      <div class="prov-card">
+        <div class="prov-av" style="background:#185FA5;">JK</div>
+        <div>
+          <div class="prov-name">Dr. James Kim</div>
+          <div class="prov-role">Endocrinology</div>
+          <div class="prov-last">Last visit: Apr 28, 2026</div>
+        </div>
+        <div class="prov-right">
+          <span class="prov-badge flag">Coordinating</span>
+          <span class="prov-msg">Message</span>
+        </div>
+      </div>
+      <div class="prov-card">
+        <div class="prov-av" style="background:#5C3D8F;">PM</div>
+        <div>
+          <div class="prov-name">Priya Mehta, LCSW</div>
+          <div class="prov-role">Behavioral Health</div>
+          <div class="prov-last">Last visit: May 1, 2026</div>
+        </div>
+        <div class="prov-right">
+          <span class="prov-badge active">Active</span>
+          <span class="prov-msg">Message</span>
+        </div>
+      </div>
+      <div class="prov-card">
+        <div class="prov-av" style="background:#8B6343;">PT</div>
+        <div>
+          <div class="prov-name">Marcus Webb, DPT</div>
+          <div class="prov-role">Physical Therapy</div>
+          <div class="prov-last">Last visit: Apr 22, 2026</div>
+        </div>
+        <div class="prov-right">
+          <span class="prov-badge active">Active</span>
+          <span class="prov-msg">Message</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming appointments -->
+  <div class="care-section">
+    <span class="care-lbl">Upcoming appointments</span>
+    <div class="appt-list">
+      <div class="appt-card">
+        <div class="appt-date-block">
+          <div class="appt-month">May</div>
+          <div class="appt-day">15</div>
+        </div>
+        <div class="appt-body">
+          <div class="appt-name">Annual wellness visit</div>
+          <div class="appt-who">Dr. Amara Osei · PCP</div>
+          <div class="appt-time">10:30 AM · Northside Medical Center</div>
+          <div class="appt-type">In-person · 45 min</div>
+          <div class="appt-actions">
+            <button class="appt-btn pool">Prepare with Sage</button>
+            <button class="appt-btn neutral">Reschedule</button>
+          </div>
+        </div>
+      </div>
+      <div class="appt-card">
+        <div class="appt-date-block">
+          <div class="appt-month">May</div>
+          <div class="appt-day">19</div>
+        </div>
+        <div class="appt-body">
+          <div class="appt-name">CBT session</div>
+          <div class="appt-who">Priya Mehta, LCSW · Behavioral health</div>
+          <div class="appt-time">2:00 PM · Telehealth</div>
+          <div class="appt-type">Video · 50 min</div>
+          <div class="appt-actions">
+            <button class="appt-btn pool">Join video call</button>
+            <button class="appt-btn neutral">Reschedule</button>
+          </div>
+        </div>
+      </div>
+      <div class="appt-card">
+        <div class="appt-date-block">
+          <div class="appt-month">Jun</div>
+          <div class="appt-day">3</div>
+        </div>
+        <div class="appt-body">
+          <div class="appt-name">Physical therapy — lower back</div>
+          <div class="appt-who">Marcus Webb, DPT</div>
+          <div class="appt-time">9:00 AM · Peachtree PT &amp; Wellness</div>
+          <div class="appt-type">In-person · 60 min</div>
+          <div class="appt-actions">
+            <button class="appt-btn pool">Prepare with Sage</button>
+            <button class="appt-btn neutral">Reschedule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Find a provider -->
+  <div class="care-section">
+    <span class="care-lbl">Find a provider</span>
+    <div class="search-bar">
+      <div class="search-icon"></div>
+      <input class="search-input" type="text" placeholder="Search by specialty, name, or condition…"/>
+    </div>
+    <div class="filter-chips">
+      <div class="fchip pool">✓ Accepts my insurance</div>
+      <div class="fchip pool">✓ Prediabetes</div>
+      <div class="fchip wind">Near Dallas, TX</div>
+      <div class="fchip muted">Telehealth</div>
+      <div class="fchip muted">Female providers</div>
+    </div>
+
+    <!-- Match 1 — best -->
+    <div class="ref-card best">
+      <div class="ref-best-tag">Best match</div>
+      <div class="ref-name">Dr. Sofia Reyes, RD, CDCES</div>
+      <div class="ref-spec">Metabolic Dietitian · Diabetes Prevention Specialist</div>
+      <div class="ref-meta-row">
+        <span class="ref-badge acc">Accepts insurance</span>
+        <span class="ref-badge dist">2.4 mi away</span>
+        <span style="font-size:10px;color:var(--river);">⭐ 4.9 · 84 reviews</span>
+      </div>
+      <div class="ref-tags">
+        <span class="ref-tag">Prediabetes reversal</span>
+        <span class="ref-tag">Family meal planning</span>
+        <span class="ref-tag">Blood sugar management</span>
+        <span class="ref-tag">Telehealth available</span>
+      </div>
+      <div class="ref-why">
+        <div class="ref-why-lbl">Why she's a match for you</div>
+        <div class="ref-why-row"><div class="ref-why-dot"></div>Specializes in the exact intersection of prediabetes reversal and family meal planning — your #1 goal.</div>
+        <div class="ref-why-row"><div class="ref-why-dot"></div>Dr. Osei has referred to her twice before for similar patients.</div>
+        <div class="ref-why-row"><div class="ref-why-dot"></div>Evening telehealth slots available — fits your work and family schedule.</div>
+      </div>
+      <button class="ref-btn">Request appointment →</button>
+    </div>
+
+    <!-- Match 2 -->
+    <div class="ref-card">
+      <div class="ref-name">Marcus Chen, RD</div>
+      <div class="ref-spec">Registered Dietitian · Integrative Nutrition</div>
+      <div class="ref-meta-row">
+        <span class="ref-badge acc">Accepts insurance</span>
+        <span class="ref-badge dist">4.1 mi away</span>
+        <span style="font-size:10px;color:var(--river);">⭐ 4.7 · 51 reviews</span>
+      </div>
+      <div class="ref-tags">
+        <span class="ref-tag">Blood sugar</span>
+        <span class="ref-tag">Weight management</span>
+        <span class="ref-tag">In-person &amp; telehealth</span>
+      </div>
+      <div class="ref-why">
+        <div class="ref-why-lbl">Why he's a match for you</div>
+        <div class="ref-why-row"><div class="ref-why-dot"></div>Strong focus on sustainable behavior change, not restrictive diets.</div>
+        <div class="ref-why-row"><div class="ref-why-dot"></div>Works with Dr. Kim's endocrinology patients frequently.</div>
+      </div>
+      <button class="ref-btn">Request appointment →</button>
+    </div>
+
+  </div><!-- /find a provider -->
+
+</div><!-- /tab-care -->
+
+
+<!-- ════════ JAVASCRIPT ════════ -->
+<script>
+// Tab switching
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Behavior check toggle
+function toggleBehav(el) {
+  el.classList.toggle('done');
+}
+
+// Domain detail swap
+const domainData = {
+  mind: {
+    title: 'Mind &amp; purpose',
+    rows: [
+      ['Stress (Sage)', 'Moderate', 'src-s', 'Sage'],
+      ['Sense of agency', 'Growing', 'src-r', 'Reflection'],
+      ['Purpose clarity', 'High', 'src-r', 'Reflection'],
+      ['Sleep quality', '6–7 hrs, disrupted', 'src-s', 'Sage'],
+      ['PHQ-9 score', '7 — mild', 'src-s', 'Sage'],
+    ]
+  },
+  medical: {
+    title: 'Medical care',
+    rows: [
+      ['HbA1c', '6.2% — prediabetes', 'src-p', 'Provider'],
+      ['Blood pressure', '118/76 — normal', 'src-p', 'Provider'],
+      ['Active Rx', 'Lisinopril 10mg', 'src-p', 'Provider'],
+      ['Treatment adherence', 'Partial', 'src-s', 'Sage'],
+      ['Last PCP visit', 'Apr 30, 2026', 'src-p', 'Provider'],
+    ]
+  },
+  relationships: {
+    title: 'Relationships &amp; environment',
+    rows: [
+      ['Social support', 'Strong family', 'src-s', 'Sage'],
+      ['Health belief fit', 'Aligned', 'src-r', 'Reflection'],
+      ['Housing', 'Stable', 'src-s', 'Sage'],
+      ['Financial stress', 'Some concern', 'src-s', 'Sage'],
+      ['Access barriers', 'Low', 'src-s', 'Sage'],
+    ]
+  },
+  lifestyle: {
+    title: 'Lifestyle',
+    rows: [
+      ['Daily behaviors active', '52 of 92', 'src-s', 'Sage'],
+      ['Adherence pattern', 'Improving', 'src-s', 'Sage'],
+      ['Goal alignment', 'Strong', 'src-r', 'Reflection'],
+      ['Exercise', '1–2× / week', 'src-s', 'Sage'],
+      ['Nutrition', '3–4 servings veg', 'src-s', 'Sage'],
+    ]
+  }
+};
+
+function showDomain(id, card) {
+  document.querySelectorAll('.gm-mini-card').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
+  const d = domainData[id];
+  document.getElementById('dd-title').innerHTML = d.title;
+  document.getElementById('dd-rows').innerHTML = d.rows.map(r =>
+    `<div class="dd-row"><span class="dd-lbl">${r[0]}</span><span class="dd-val">${r[1]}<span class="src ${r[2]}">${r[3]}</span></span></div>`
+  ).join('');
+}
+</script>
+</body>
+</html>
