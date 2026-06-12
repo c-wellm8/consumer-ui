@@ -1,1212 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>The Wellmate — Taylor Jordan</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html{font-size:16px;}
-body{font-family:'DM Sans',sans-serif;font-weight:400;background:#EEF2F0;color:#052C22;min-height:100vh;-webkit-font-smoothing:antialiased;}
-:root{
-  /* Brand */
-  --shale:#052C22;--shale-80:#1A3D2E;
-  --pool:#00875F;--pool-d:#005F42;--pool-l:#D6F0E8;
-  --wind:#006FA3;--wind-l:#D6EDF7;
-  --glow:#B87000;--glow-l:#FDF0D0;
-  --river:#3D5248;--mist:#9DB5AC;--mist-l:#DDE8E4;
-  --card:#FFFFFF;--surface:#F2F6F4;
-  --radius:16px;--radius-sm:10px;--radius-xs:7px;
-  /* ADA contrast-safe text on light */
-  --text-primary:#052C22;
-  --text-secondary:#3D5248;
-  --text-tertiary:#5A6E66;
-  --text-disabled:#8A9E97;
-  /* Focus ring */
-  --focus:#0056B3;
-  /* Dark mode overrides applied via @media */
-}
-
-/* ── DARK MODE ── */
-body.dark{
-  --shale:#0A1F16;--shale-80:#112B1E;
-  --pool:#00C49A;--pool-d:#00A07C;--pool-l:#003D2E;
-  --wind:#29AADC;--wind-l:#00304D;
-  --glow:#F5B93A;--glow-l:#3D2E00;
-  --river:#7FB5A2;--mist:#2A3D35;--mist-l:#1E2E27;
-  --card:#0F1F18;--surface:#071510;
-  --text-primary:#E8F5F0;
-  --text-secondary:#9DC9BA;
-  --text-tertiary:#7EB5A5;
-  --text-disabled:#4A6B5E;
-  background:#071510;
-  color:#E8F5F0;
-}
-
-/* ── THEME TOGGLE ── */
-.theme-toggle{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:14px;cursor:pointer;display:flex;align-items:center;gap:5px;color:#fff;font-family:'DM Sans',sans-serif;transition:background .15s;}
-.theme-toggle:hover{background:rgba(255,255,255,.18);}
-.sb-theme-toggle{margin:12px 10px 0;padding:9px 12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;cursor:pointer;font-size:12px;font-weight:500;color:rgba(255,255,255,.65);font-family:'DM Sans',sans-serif;width:calc(100% - 20px);text-align:left;display:flex;align-items:center;gap:8px;transition:background .15s;}
-.sb-theme-toggle:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);}
-
-/* ── FOCUS VISIBLE ── */
-:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px;}
-button:focus-visible,a:focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
-
-/* ── COLORBLIND SAFE: domain tags use shape + label not just color ── */
-.behav-tag-lifestyle::before{content:'◆ ';}
-.behav-tag-medical::before{content:'＋ ';}
-.behav-tag-movement::before{content:'▲ ';}
-.behav-tag-mind::before{content:'● ';}
-.behav-tag-reflect::before{content:'◉ ';}
-
-/* ── TREE CLICKABLE ── */
-.tree-row{cursor:pointer;transition:box-shadow .15s,border-color .15s;}
-.tree-row:hover{border-color:var(--pool);box-shadow:0 2px 12px rgba(0,135,95,.12);}
-.tree-row:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:var(--radius);}
-.tree-grow-hint{display:flex;align-items:center;justify-content:flex-end;gap:4px;margin-top:6px;font-size:12px;font-weight:500;color:var(--pool);}
-.tree-grow-hint-arrow{font-size:14px;}
-
-/* ── GROW TAB: tree echo banner ── */
-.grow-echo{background:var(--pool-l);border:1px solid var(--pool);border-radius:var(--radius-sm);padding:12px 15px;margin-bottom:14px;display:flex;align-items:center;gap:12px;}
-.grow-echo-tree{flex-shrink:0;}
-.grow-echo-text{flex:1;}
-.grow-echo-title{font-size:13px;font-weight:500;color:var(--pool-d);margin-bottom:2px;}
-.grow-echo-sub{font-size:12px;color:var(--text-secondary);line-height:1.5;}
-
-/* ── SKIP LINK (screen reader) ── */
-.skip-link{position:absolute;top:-100px;left:0;background:var(--focus);color:#fff;padding:8px 16px;font-size:14px;font-weight:500;border-radius:0 0 8px 0;z-index:999;transition:top .1s;}
-.skip-link:focus{top:0;}
-
-/* ── REDUCED MOTION ── */
-@media(prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important;}
-}
-
-.app{display:flex;flex-direction:column;min-height:100vh;max-width:480px;margin:0 auto;background:var(--surface);position:relative;}
-@media(min-width:900px){
-  .app{max-width:100%;flex-direction:row;}
-  .sidebar{display:flex!important;}
-  .topbar{display:none!important;}
-  .bottom-nav{display:none!important;}
-  .main-scroll{margin-left:200px;padding-bottom:0;}
-}
-
-/* ── SIDEBAR desktop ── */
-.sidebar{display:none;position:fixed;top:0;left:0;width:200px;height:100vh;background:var(--shale);flex-direction:column;padding:24px 0 20px;z-index:200;}
-.sb-brand{padding:0 20px 24px;border-bottom:.5px solid rgba(255,255,255,.08);}
-.sb-cairn{display:flex;align-items:flex-end;gap:2px;margin-bottom:8px;}
-.sc1{width:9px;height:18px;border-radius:9px 9px 5px 5px;background:var(--wind);transform:rotate(-8deg);margin-bottom:2px;}
-.sc2{width:8px;height:14px;border-radius:8px 8px 5px 5px;background:var(--pool);}
-.sc3{width:7px;height:10px;border-radius:5px;background:var(--glow);transform:rotate(5deg);margin-bottom:2px;}
-.sb-wordmark .the{font-size:11px;color:rgba(255,255,255,.65);display:block;letter-spacing:.05em;}
-.sb-wordmark .wm{font-family:'Lora',serif;font-size:14px;font-weight:500;color:#fff;}
-.sb-user{padding:16px 20px;display:flex;align-items:center;gap:9px;border-bottom:.5px solid rgba(255,255,255,.06);}
-.sb-av{width:32px;height:32px;border-radius:50%;background:var(--pool);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0;}
-.sb-uname{font-size:12px;font-weight:500;color:#fff;}
-.sb-urole{font-size:12px;color:rgba(255,255,255,.7);margin-top:1px;}
-.sb-nav{padding:12px 10px 0;flex:1;display:flex;flex-direction:column;gap:2px;}
-.sb-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:400;color:rgba(255,255,255,.75);border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;transition:all .15s;}
-.sb-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.75);}
-.sb-item.active{background:rgba(0,163,134,.18);color:#fff;font-weight:500;}
-.sb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-
-/* ── TOPBAR mobile ── */
-.topbar{background:var(--shale);padding:11px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
-.tb-left{display:flex;align-items:center;gap:8px;}
-.tb-cairn{display:flex;align-items:flex-end;gap:2px;}
-.tc1{width:8px;height:15px;border-radius:8px 8px 5px 5px;background:var(--wind);transform:rotate(-8deg);margin-bottom:1px;}
-.tc2{width:7px;height:12px;border-radius:7px 7px 5px 5px;background:var(--pool);}
-.tc3{width:6px;height:9px;border-radius:5px;background:var(--glow);transform:rotate(5deg);margin-bottom:1px;}
-.tb-wordmark .the{font-size:11px;color:rgba(255,255,255,.65);display:block;}
-.tb-wordmark .wm{font-family:'Lora',serif;font-size:12px;font-weight:500;color:#fff;}
-.tb-av{width:28px;height:28px;border-radius:50%;background:var(--pool);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;}
-.accent-bar{height:2px;background:linear-gradient(90deg,var(--wind),var(--pool) 50%,var(--glow));}
-
-/* ── MAIN SCROLL ── */
-.main-scroll{flex:1;overflow-y:auto;padding-bottom:72px;}
-.tab-pane{display:none;padding:18px 16px 8px;}
-.tab-pane.active{display:block;}
-@media(min-width:900px){.tab-pane{padding:28px 36px;max-width:720px;}}
-
-/* ── BOTTOM NAV mobile ── */
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--card);border-top:.5px solid var(--mist);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px 7px;cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;transition:color .15s;}
-.bn-label{font-size:12px;font-weight:400;color:var(--river);}
-.bn-item.active .bn-label{color:var(--pool);font-weight:500;}
-.bn-icon svg{stroke:var(--river);transition:stroke .15s;}
-.bn-item.active .bn-icon svg{stroke:var(--pool);}
-
-/* ── SHARED ── */
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);display:block;margin-bottom:4px;}
-.section-title{font-family:'Lora',serif;font-size:16px;font-weight:500;color:var(--shale);margin-bottom:14px;line-height:1.3;}
-.card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;}
-.divider{height:.5px;background:var(--mist);margin:12px 0;}
-.btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;border-radius:var(--radius-sm);padding:7px 14px;border:1px solid;cursor:pointer;transition:all .15s;display:inline-block;text-align:center;}
-.btn-pool{background:var(--pool-l);border-color:var(--pool);color:var(--pool-d);}
-.btn-pool:hover{background:var(--pool);color:#fff;}
-.btn-wind{background:var(--wind-l);border-color:var(--wind);color:#0A5C7A;}
-.btn-glow{background:var(--glow-l);border-color:var(--glow);color:#8A5A00;}
-.btn-full{width:100%;display:block;padding:9px;}
-.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:3px 8px;border-radius:20px;border:1px solid;}
-.pill-pool{background:var(--pool-l);border-color:var(--pool);color:var(--pool-d);}
-.pill-wind{background:var(--wind-l);border-color:var(--wind);color:#0A5C7A;}
-.pill-glow{background:var(--glow-l);border-color:var(--glow);color:#8A5A00;}
-.pill-mist{background:var(--surface);border-color:var(--text-tertiary);color:var(--river);}
-.src{font-size:11px;padding:1px 5px;border-radius:4px;margin-left:3px;}
-.src-s{background:var(--wind-l);color:#0A5C7A;}
-.src-r{background:#F0EBF8;color:#5C3D8F;}
-.src-p{background:var(--pool-l);color:var(--pool-d);}
-
-/* ══════════════════════════════════════
-   TODAY TAB
-══════════════════════════════════════ */
-
-/* Goal cards */
-.goal-section{margin-bottom:16px;}
-.goal-section-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
-.goal-cards{display:flex;flex-direction:column;gap:9px;}
-.goal-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:14px 16px;}
-.goal-card-active{border-color:var(--pool);}
-.goal-card-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:8px;}
-.goal-card-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:1px;}
-.goal-card-name{font-size:12px;font-weight:500;color:var(--shale);line-height:1.4;margin-bottom:2px;}
-.goal-card-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;}
-.goal-state-row{display:flex;align-items:center;gap:5px;margin-bottom:7px;}
-.goal-state-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.goal-state-lbl{font-size:10px;font-weight:500;}
-.goal-state-divider{font-size:10px;color:var(--text-tertiary);}
-.goal-milestone-txt{font-size:12px;color:var(--text-secondary);}
-.goal-progress{height:4px;background:var(--mist);border-radius:2px;overflow:hidden;margin-bottom:7px;}
-.goal-progress-fill{height:4px;border-radius:2px;}
-.goal-card-footer{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
-.goal-milestone-detail{font-size:12px;color:var(--text-secondary);line-height:1.4;flex:1;}
-.goal-target{font-size:12px;color:var(--text-secondary);flex-shrink:0;white-space:nowrap;}
-
-/* Sage moment card */
-.sage-moment{background:var(--shale);border-radius:var(--radius);padding:20px 20px 16px;margin-bottom:12px;position:relative;overflow:hidden;}
-.sage-moment::after{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(0,163,134,.18) 0%,transparent 70%);pointer-events:none;}
-.sm-from{display:flex;align-items:center;gap:7px;margin-bottom:12px;}
-.sm-av{width:22px;height:22px;border-radius:50%;background:rgba(0,163,134,.2);border:1px solid rgba(0,163,134,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.sm-av-dot{width:7px;height:7px;border-radius:50%;background:var(--pool);}
-.sm-from-lbl{font-size:10px;font-weight:500;color:rgba(255,255,255,.8);}
-.sm-celebration{font-family:'Lora',serif;font-size:14px;color:#fff;line-height:1.7;font-style:italic;margin-bottom:16px;position:relative;z-index:1;}
-.sm-celebration strong{font-style:normal;color:rgba(0,163,134,.95);font-weight:500;}
-.sm-action-lbl{font-size:12px;font-weight:500;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;}
-.sm-action{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;position:relative;z-index:1;}
-.sm-action-text{font-size:13px;font-weight:500;color:#fff;margin-bottom:3px;}
-.sm-action-why{font-size:10px;color:rgba(255,255,255,.8);line-height:1.55;}
-.sm-btns{display:flex;gap:8px;position:relative;z-index:1;}
-.sm-btn{flex:1;padding:9px;border-radius:var(--radius-sm);font-size:11px;font-weight:500;border:1px solid;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;transition:all .15s;}
-.sm-btn-yes{background:var(--pool);border-color:var(--pool);color:#fff;}
-.sm-btn-yes:hover{background:var(--pool-d);}
-.sm-btn-skip{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.82);}
-
-/* Tree row */
-.tree-row{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;display:flex;gap:16px;align-items:center;}
-.tree-visual{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.tree-stage{font-size:11px;font-weight:500;color:var(--pool);}
-.tree-info{flex:1;min-width:0;}
-.tree-progress{height:4px;background:var(--mist);border-radius:2px;overflow:hidden;margin:5px 0 4px;}
-.tree-progress-fill{height:4px;background:linear-gradient(90deg,var(--pool),var(--wind));border-radius:2px;}
-.tree-stat{font-size:10px;font-weight:500;color:var(--shale);}
-.tree-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;}
-.tree-next{font-size:12px;color:var(--text-secondary);}
-.tree-next strong{color:var(--shale);font-weight:500;}
-
-/* Behavior list */
-.behav-list{display:flex;flex-direction:column;gap:7px;}
-.behav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);cursor:pointer;transition:all .12s;}
-.behav-item.done{background:var(--pool-l);border-color:rgba(0,163,134,.3);}
-.behav-check{width:20px;height:20px;border-radius:6px;border:2px solid var(--mist);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .12s;background:var(--card);}
-.behav-item.done .behav-check{background:var(--pool);border-color:var(--pool);}
-.behav-check-mark{width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:none;}
-.behav-item.done .behav-check-mark{display:block;}
-.behav-text{font-size:11px;color:var(--shale);flex:1;line-height:1.4;}
-.behav-item.done .behav-text{color:var(--river);}
-.behav-tag{font-size:11px;font-weight:500;padding:2px 7px;border-radius:8px;flex-shrink:0;}
-.goal-card-active{border-color:var(--pool);}
-.goal-sage-link{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:.5px dashed rgba(0,163,134,.3);font-size:12px;font-weight:500;color:var(--pool);}
-.gsl-dot{width:6px;height:6px;border-radius:50%;background:var(--pool);flex-shrink:0;}
-.behav-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
-.behav-goal-tag{font-size:11px;font-weight:500;color:var(--river);}
-.behav-item.done .behav-goal-tag{color:var(--pool-d);}
-.behav-pts{font-size:12px;font-weight:500;color:var(--text-tertiary);flex-shrink:0;min-width:32px;text-align:right;transition:color .15s;}
-.behav-pts.done-pts{color:var(--pool);}
-.behav-item.done .behav-pts{color:var(--pool);}
-
-/* ══════════════════════════════════════
-   GROW TAB
-══════════════════════════════════════ */
-
-/* Growth map */
-.gm-state-center{text-align:center;padding:14px 0 10px;margin-bottom:2px;}
-.gm-state-label{font-size:12px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
-.gm-state-value{font-family:'Lora',serif;font-size:22px;font-weight:500;color:var(--shale);}
-.gm-state-sub{font-size:12px;color:var(--text-secondary);margin-top:3px;line-height:1.5;}
-.gm-quadrant{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.gm-q{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:13px 14px;cursor:pointer;transition:border-color .15s,background .15s;}
-.gm-q:hover,.gm-q.active{border-color:var(--pool);background:var(--pool-l);}
-.gm-q-name{font-size:11px;font-weight:500;color:var(--shale);margin-bottom:4px;}
-.gm-q-state{display:flex;align-items:center;gap:4px;margin-bottom:8px;}
-.gm-q-dot{width:5px;height:5px;border-radius:50%;}
-.gm-q-state-lbl{font-size:12px;}
-.gm-q-track{height:4px;background:var(--mist);border-radius:2px;position:relative;margin-bottom:5px;}
-.gm-q-fill{height:4px;border-radius:2px;}
-.gm-q-needle{position:absolute;top:-4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.08);transform:translateX(-50%);}
-.gm-q-scale{display:flex;justify-content:space-between;}
-.gm-q-scale span{font-size:11px;font-weight:500;}
-.gm-q-peer{display:flex;align-items:center;gap:5px;margin-top:6px;padding-top:6px;border-top:.5px solid var(--mist);}
-.gm-q-peer-lbl{font-size:11px;color:var(--river);flex-shrink:0;}
-.gm-q-range{position:relative;flex:1;height:4px;background:var(--mist);border-radius:2px;}
-.gm-q-range-fill{position:absolute;top:0;height:4px;border-radius:2px;opacity:.22;}
-.gm-q-range-mid{position:absolute;top:-3px;width:1.5px;height:10px;background:rgba(5,44,34,.2);border-radius:1px;transform:translateX(-50%);}
-.gm-q-range-dot{position:absolute;top:-4px;width:12px;height:12px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px rgba(0,0,0,.1);transform:translateX(-50%);}
-.gm-q-dir{font-size:11px;flex-shrink:0;}
-
-.domain-detail{background:var(--card);border:1px solid var(--pool);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
-.dd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.dd-title{font-size:13px;font-weight:500;color:var(--shale);}
-.dd-rows{display:flex;flex-direction:column;gap:7px;}
-.dd-actions{display:flex;flex-direction:column;gap:7px;}
-.dd-action-item{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);cursor:pointer;transition:border-color .15s,background .15s;}
-.dd-action-item:hover{border-color:var(--pool);background:var(--pool-l);}
-.dd-action-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
-.dd-action-body{flex:1;min-width:0;}
-.dd-action-text{font-size:11px;font-weight:500;color:var(--shale);line-height:1.4;margin-bottom:2px;}
-.dd-action-why{font-size:12px;color:var(--text-secondary);line-height:1.4;}
-.dd-action-cta{margin-left:auto;font-size:12px;font-weight:500;color:var(--pool);flex-shrink:0;padding-top:2px;white-space:nowrap;}
-
-/* Longevity optimizer — behavior bars */
-.domain-bars{display:flex;flex-direction:column;gap:9px;}
-.domain-bar-row{display:flex;align-items:center;gap:10px;}
-.domain-bar-lbl{font-size:10px;font-weight:500;color:var(--shale);width:110px;flex-shrink:0;}
-.domain-bar-track{flex:1;height:5px;background:var(--mist);border-radius:2px;overflow:hidden;}
-.domain-bar-fill{height:5px;border-radius:2px;}
-.domain-bar-count{font-size:12px;color:var(--text-secondary);width:48px;text-align:right;flex-shrink:0;}
-
-/* Tree card in Grow tab */
-.grow-tree-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;}
-.grow-tree-layout{display:flex;gap:20px;align-items:center;}
-.grow-tree-right{flex:1;}
-.grow-tree-stage{font-size:10px;font-weight:500;color:var(--pool);margin-bottom:4px;}
-.grow-tree-stages{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap;}
-.stage-pip{height:4px;border-radius:2px;flex:1;}
-
-/* Sage in Grow */
-.sage-insight{background:var(--shale-80);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:12px;}
-.si-from{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
-.si-av{width:18px;height:18px;border-radius:50%;background:rgba(0,163,134,.25);border:1px solid rgba(0,163,134,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.si-av-dot{width:6px;height:6px;border-radius:50%;background:var(--pool);}
-.si-lbl{font-size:12px;font-weight:500;color:rgba(255,255,255,.72);}
-.si-text{font-family:'Lora',serif;font-size:12px;color:rgba(255,255,255,.85);line-height:1.7;font-style:italic;}
-.si-text strong{font-style:normal;color:rgba(0,163,134,.9);font-weight:500;}
-
-/* ══════════════════════════════════════
-   CARE TAB
-══════════════════════════════════════ */
-.care-section{margin-bottom:20px;}
-.care-lbl{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);padding-bottom:8px;border-bottom:.5px solid var(--mist);margin-bottom:11px;display:block;}
-.insight-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:14px 16px;margin-bottom:9px;}
-.insight-card.hl{border-color:var(--pool);background:#00A38606;}
-.insight-card.fl{border-color:var(--glow);background:#FAAE3C05;}
-.insight-from{font-size:12px;color:var(--text-secondary);margin-bottom:5px;}
-.insight-from strong{color:var(--shale);font-weight:500;}
-.insight-body{font-family:'Lora',serif;font-size:11px;color:var(--shale);line-height:1.7;margin-bottom:10px;font-style:italic;}
-.insight-action{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.insight-label{font-size:12px;font-weight:500;color:var(--shale);}
-.insight-sub{font-size:12px;color:var(--text-secondary);margin-top:2px;}
-.provider-list{display:flex;flex-direction:column;gap:8px;}
-.prov-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;gap:11px;}
-.prov-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#fff;flex-shrink:0;}
-.prov-name{font-size:12px;font-weight:500;color:var(--shale);}
-.prov-role{font-size:12px;color:var(--text-secondary);margin-top:1px;}
-.prov-last{font-size:12px;color:var(--text-secondary);margin-top:3px;}
-.prov-right{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-.prov-msg{font-size:12px;color:var(--wind);cursor:pointer;font-weight:500;}
-.appt-list{display:flex;flex-direction:column;gap:8px;}
-.appt-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:12px 14px;display:flex;gap:13px;}
-.appt-date{text-align:center;flex-shrink:0;width:34px;}
-.appt-month{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--river);}
-.appt-day{font-family:'Lora',serif;font-size:22px;font-weight:500;color:var(--shale);line-height:1.1;}
-.appt-body{flex:1;min-width:0;}
-.appt-name{font-size:12px;font-weight:500;color:var(--shale);}
-.appt-who{font-size:12px;color:var(--text-secondary);margin-top:1px;}
-.appt-time{font-size:10px;color:var(--pool);margin-top:3px;font-weight:500;}
-.appt-type{font-size:12px;color:var(--text-secondary);margin-top:1px;}
-.appt-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
-.appt-btn{font-size:12px;font-weight:500;padding:4px 10px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;border:1px solid;}
-.appt-btn.pool{color:var(--pool-d);background:var(--pool-l);border-color:var(--pool);}
-.appt-btn.neutral{color:var(--river);background:var(--surface);border-color:var(--text-tertiary);}
-.search-bar{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:10px 13px;margin-bottom:9px;}
-.search-input{flex:1;border:none;background:none;font-size:12px;color:var(--shale);font-family:'DM Sans',sans-serif;outline:none;}
-.search-input::placeholder{color:var(--river);}
-.filter-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.ref-card{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;position:relative;}
-.ref-card.best{border-color:var(--pool);background:#00A38604;}
-.ref-best-tag{position:absolute;top:-1px;right:13px;font-size:11px;font-weight:500;color:#fff;background:var(--pool);padding:2px 8px;border-radius:0 0 6px 6px;}
-.ref-name{font-family:'Lora',serif;font-size:13px;font-weight:500;color:var(--shale);margin-bottom:2px;}
-.ref-spec{font-size:12px;color:var(--text-secondary);margin-bottom:8px;}
-.ref-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;align-items:center;}
-.ref-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;}
-.ref-tag{font-size:12px;padding:3px 8px;border-radius:8px;background:var(--surface);border:1px solid var(--mist);color:var(--river);}
-.ref-why{border-top:.5px solid var(--mist);padding-top:9px;}
-.ref-why-lbl{font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:5px;}
-.ref-why-row{display:flex;gap:6px;font-size:12px;color:var(--text-primary);margin-bottom:4px;line-height:1.45;}
-.ref-why-dot{width:5px;height:5px;border-radius:50%;background:var(--pool);flex-shrink:0;margin-top:4px;}
-.ref-btn{width:100%;background:var(--pool-l);border:1px solid var(--pool);color:var(--pool-d);border-radius:var(--radius-sm);padding:8px;font-size:10px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;}
-.ref-btn:hover{background:var(--pool);color:#fff;}
-
-/* ══════════════════════════════════════
-   THE WELL TAB
-══════════════════════════════════════ */
-.well-hero{background:linear-gradient(140deg,var(--shale) 0%,#0A3D28 100%);border-radius:var(--radius);padding:28px 22px;margin-bottom:12px;text-align:center;position:relative;overflow:hidden;}
-.well-hero::before{content:'';position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(0,163,134,.15) 0%,transparent 65%);}
-.well-rings{width:72px;height:72px;border-radius:50%;border:2px solid rgba(0,163,134,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;position:relative;z-index:1;}
-.well-ring-inner{width:50px;height:50px;border-radius:50%;border:2px solid rgba(0,163,134,.45);display:flex;align-items:center;justify-content:center;background:rgba(0,163,134,.07);}
-.well-center-dot{width:12px;height:12px;border-radius:50%;background:var(--pool);}
-.well-title{font-family:'Lora',serif;font-size:22px;font-weight:500;color:#fff;margin-bottom:8px;position:relative;z-index:1;}
-.well-sub{font-size:13px;color:rgba(255,255,255,.88);line-height:1.7;margin-bottom:18px;position:relative;z-index:1;}
-.well-avatars{display:flex;justify-content:center;margin-bottom:6px;position:relative;z-index:1;}
-.well-av{width:32px;height:32px;border-radius:50%;border:2px solid var(--shale);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#fff;margin-left:-7px;}
-.well-av:first-child{margin-left:0;}
-.well-count{font-size:12px;color:rgba(255,255,255,.82);margin-bottom:18px;position:relative;z-index:1;}
-.well-cta{background:rgba(0,163,134,.18);border:1px solid rgba(0,163,134,.4);border-radius:var(--radius-sm);padding:10px 22px;font-size:12px;font-weight:500;color:var(--pool);cursor:pointer;font-family:'DM Sans',sans-serif;position:relative;z-index:1;}
-.well-goal-item{background:var(--card);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
-.well-goal-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.well-goal-name{font-size:11px;font-weight:500;color:var(--shale);flex:1;}
-.well-goal-count{font-size:12px;color:var(--text-secondary);}
-.well-goal-btn{font-size:12px;font-weight:500;color:var(--pool);background:var(--pool-l);border:1px solid var(--pool);border-radius:7px;padding:4px 9px;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0;}
-.well-coming-note{background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:12px 14px;}
-.well-coming-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--pool);background:var(--pool-l);border:1px solid var(--pool);border-radius:20px;padding:2px 8px;margin-bottom:7px;}
-.well-coming-dot{width:5px;height:5px;border-radius:50%;background:var(--pool);}
-.well-coming-text{font-size:11px;color:var(--shale);line-height:1.65;}
-/* ── GOAL MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(5,44,34,.45);z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
-.modal-overlay.open{opacity:1;pointer-events:all;}
-@media(min-width:900px){.modal-overlay{align-items:center;}}
-.modal-sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;transform:translateY(100%);transition:transform .25s cubic-bezier(.32,.72,0,1);padding:0 0 32px;}
-@media(min-width:900px){.modal-sheet{border-radius:20px;max-width:540px;max-height:80vh;transform:translateY(20px);}}
-.modal-overlay.open .modal-sheet{transform:translateY(0);}
-.modal-handle{width:36px;height:4px;border-radius:2px;background:var(--mist);margin:12px auto 0;}
-.modal-header{padding:16px 20px 0;}
-.modal-eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:4px;display:block;}
-.modal-title{font-family:'Lora',serif;font-size:18px;font-weight:500;color:var(--shale);line-height:1.3;margin-bottom:4px;}
-.modal-state-row{display:flex;align-items:center;gap:5px;margin-bottom:14px;}
-.modal-close{position:absolute;top:14px;right:16px;width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--mist);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--river);}
-.modal-body{padding:0 20px;}
-.modal-divider{height:.5px;background:var(--mist);margin:14px 0;}
-
-/* Provider note inside modal */
-.prov-note{background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:10px;}
-.prov-note.hl{border-color:var(--pool);background:var(--pool-l);}
-.pn-from{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.pn-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#fff;flex-shrink:0;}
-.pn-name{font-size:10px;font-weight:500;color:var(--shale);}
-.pn-role{font-size:12px;color:var(--text-secondary);}
-.pn-body{font-family:'Lora',serif;font-size:12px;color:var(--shale);line-height:1.7;font-style:italic;margin-bottom:6px;}
-.pn-date{font-size:12px;color:var(--text-secondary);}
-
-/* Sage insight inside modal */
-.modal-sage{background:var(--shale);border-radius:var(--radius-sm);padding:13px 15px;margin-bottom:10px;}
-.ms-from{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
-.ms-av{width:20px;height:20px;border-radius:50%;background:rgba(0,163,134,.25);border:1px solid rgba(0,163,134,.4);display:flex;align-items:center;justify-content:center;}
-.ms-dot{width:7px;height:7px;border-radius:50%;background:var(--pool);}
-.ms-lbl{font-size:12px;font-weight:500;color:rgba(255,255,255,.72);}
-.ms-text{font-family:'Lora',serif;font-size:12px;color:rgba(255,255,255,.85);line-height:1.7;font-style:italic;}
-.ms-text strong{font-style:normal;color:rgba(0,163,134,.9);font-weight:500;}
-
-/* Focus list inside modal */
-.focus-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
-.focus-item{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);}
-.focus-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-.focus-name{font-size:11px;font-weight:500;color:var(--shale);margin-bottom:2px;}
-.focus-desc{font-size:12px;color:var(--text-secondary);line-height:1.5;}
-
-/* Milestone checklist */
-.milestone-list{display:flex;flex-direction:column;gap:7px;}
-.milestone-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--mist);border-radius:var(--radius-sm);}
-.milestone-item.done{background:var(--pool-l);border-color:rgba(0,163,134,.3);}
-.ms-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--mist);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--card);}
-.milestone-item.done .ms-check{background:var(--pool);border-color:var(--pool);}
-.ms-check-mark{width:7px;height:4px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;transform:rotate(-45deg) translateY(-1px);}
-.ms-txt{font-size:11px;color:var(--shale);flex:1;line-height:1.4;}
-.milestone-item.done .ms-txt{color:var(--river);}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Wellmate — Age Well Mockup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <style>
+    body { background: #f0f2f5; margin: 0; padding: 2rem 1rem; }
+    .page-label { font-family: 'Georgia', serif; font-size: 11px; color: #4D545E; text-align: center; margin-bottom: 1rem; letter-spacing: 0.05em; text-transform: uppercase; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    .aw { font-family: 'Georgia', serif; padding: 1.25rem; max-width: 720px; margin: 0 auto; color: #052C22; background: #fff; border-radius: 16px; box-shadow: 0 2px 16px rgba(5,44,34,0.07); }
+    .top-card { background: #f4f7fa; border-radius: 14px; padding: 1.25rem 1.5rem 1.5rem; margin-bottom: 1.25rem; border: 0.5px solid #D3DAE5; }
+    .top-title { font-family: 'Cambria', 'Georgia', serif; font-size: 18px; font-weight: 600; color: #052C22; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+    .insight-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
+    .insight-box { background: #fff; border: 0.5px solid #D3DAE5; border-radius: 10px; padding: 1rem 0.75rem 0.9rem; text-align: center; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; }
+    .insight-box:hover { border-color: #00A386; box-shadow: 0 0 0 2px rgba(0,163,134,0.12); }
+    .insight-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; font-size: 18px; }
+    .insight-icon.pool { background: #E1F5EE; color: #00A386; }
+    .insight-icon.wind { background: #e0f4fb; color: #0093BF; }
+    .insight-icon.glow { background: #fff8e6; color: #c47f00; }
+    .insight-label { font-family: 'Georgia', serif; font-size: 11.5px; color: #4D545E; line-height: 1.4; }
+    .day-label { font-family: 'Georgia', serif; font-size: 14px; color: #4D545E; margin-bottom: 2px; }
+    .minutes-hero { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .minutes-big { font-family: 'Cambria', 'Georgia', serif; font-size: 42px; font-weight: 600; color: #0093BF; line-height: 1; transition: all 0.3s; }
+    .minutes-suffix { font-family: 'Georgia', serif; font-size: 15px; color: #4D545E; }
+    .minutes-subline { font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; font-style: italic; margin-bottom: 1.1rem; line-height: 1.5; }
+    .minutes-subline strong { font-style: normal; color: #052C22; font-weight: 600; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+    .bar-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .bar-domain { font-family: 'Georgia', serif; font-size: 13px; color: #4D545E; width: 64px; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 8px; background: #D3DAE5; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .bar-val { font-family: 'Cambria', 'Georgia', serif; font-size: 12px; font-weight: 600; width: 52px; text-align: right; flex-shrink: 0; transition: color 0.3s; }
+    .checkin-row { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 0.75rem; border-top: 0.5px solid #D3DAE5; flex-wrap: wrap; gap: 8px; }
+    .last-checkin { font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; }
+    .btn-primary { background: #0093BF; color: #fff; border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Georgia', serif; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s; }
+    .btn-primary:hover { background: #007aa0; }
+    .btn-primary.syncing { background: #00A386; }
+    .divider { height: 0.5px; background: #D3DAE5; margin: 1.25rem 0; }
+    .section-title { font-family: 'Cambria', 'Georgia', serif; font-size: 16px; font-weight: 600; color: #052C22; margin-bottom: 0.35rem; }
+    .section-sub { font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+    .domains-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .domain-row { border: 0.5px solid #D3DAE5; border-radius: 12px; overflow: hidden; background: #fff; transition: border-color 0.15s; }
+    .domain-row:hover { border-color: #b0bec5; }
+    .domain-row.move-d.open  { border-color: #00A386; border-width: 1px; }
+    .domain-row.mind-d.open  { border-color: #0093BF; border-width: 1px; }
+    .domain-row.live-d.open  { border-color: #052C22; border-width: 1px; }
+    .domain-row.connect-d.open { border-color: #FAAE3C; border-width: 1px; }
+    .domain-header { display: grid; grid-template-columns: 32px 1fr auto 110px 24px; align-items: center; gap: 12px; padding: 0.9rem 1.1rem; cursor: pointer; }
+    .d-icon { font-size: 20px; }
+    .d-name { font-family: 'Cambria', 'Georgia', serif; font-size: 14px; font-weight: 600; color: #052C22; }
+    .d-mins-inline { font-family: 'Cambria', 'Georgia', serif; font-size: 17px; font-weight: 600; text-align: right; white-space: nowrap; transition: all 0.3s; }
+    .d-mins-inline .unit { font-size: 11px; font-weight: 400; color: #4D545E; }
+    .d-bar-inline { height: 4px; background: #D3DAE5; border-radius: 2px; overflow: hidden; }
+    .d-bar-fill-inline { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+    .d-chevron { font-size: 14px; color: #4D545E; transition: transform 0.2s; text-align: right; }
+    .domain-row.open .d-chevron { transform: rotate(180deg); }
+    .domain-detail { display: none; padding: 0 1.1rem 1rem; border-top: 0.5px solid #D3DAE5; }
+    .domain-row.open .domain-detail { display: block; }
+    .acts-header { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; padding: 8px 0 4px; border-bottom: 0.5px solid #D3DAE5; margin-bottom: 2px; align-items: center; }
+    .acts-col-left { font-family: 'Georgia', serif; font-size: 10px; color: #4D545E; font-style: italic; }
+    .acts-col-right { font-family: 'Georgia', serif; font-size: 10px; color: #4D545E; font-style: italic; text-align: right; }
+    .act { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid #f0f3f7; }
+    .act:last-of-type { border-bottom: none; }
+    .chk { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #D3DAE5; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 11px; color: transparent; transition: all 0.15s; }
+    .chk.on { color: #fff; }
+    .act-text { font-family: 'Georgia', serif; font-size: 13px; color: #052C22; line-height: 1.4; }
+    .act-contrib { font-size: 11px; font-style: italic; }
+    .cadence-pills { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .cpill { display: flex; align-items: center; gap: 5px; cursor: pointer; font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; white-space: nowrap; user-select: none; }
+    .cpill-dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #D3DAE5; background: transparent; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .detail-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; padding-top: 8px; border-top: 0.5px solid #D3DAE5; flex-wrap: wrap; gap: 6px; }
+    .cite { font-family: 'Georgia', serif; font-size: 10px; color: #4D545E; display: flex; align-items: center; gap: 5px; font-style: italic; }
+    .cite-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .popup-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(5,44,34,0.3); z-index: 200; align-items: center; justify-content: center; }
+    .popup-overlay.visible { display: flex; }
+    .popup-box { background: #fff; border-radius: 14px; padding: 1.75rem 1.75rem 1.25rem; max-width: 440px; width: 92%; position: relative; max-height: 82vh; overflow-y: auto; border: 0.5px solid #D3DAE5; }
+    .popup-close { position: absolute; top: 14px; right: 16px; background: none; border: none; cursor: pointer; font-size: 16px; color: #4D545E; font-family: 'Georgia', serif; }
+    .popup-close:hover { color: #052C22; }
+    .popup-title { font-family: 'Cambria', 'Georgia', serif; font-size: 20px; font-weight: 600; color: #052C22; margin-bottom: 1rem; }
+    .popup-body { font-family: 'Georgia', serif; font-size: 14px; color: #4D545E; line-height: 1.75; }
+    .popup-body p { margin-bottom: 0.85rem; }
+    .popup-stat { background: #f4f7fa; border-radius: 10px; padding: 1.1rem; text-align: center; margin-top: 1rem; border: 0.5px solid #D3DAE5; }
+    .popup-stat-num { font-family: 'Cambria', 'Georgia', serif; font-size: 30px; font-weight: 600; }
+    .popup-stat-num.pool { color: #00A386; }
+    .popup-stat-num.wind { color: #0093BF; }
+    .popup-stat-num.glow { color: #c47f00; }
+    .popup-stat-label { font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; margin-top: 5px; }
+    .popup-cta { font-family: 'Georgia', serif; font-size: 12px; color: #4D545E; text-align: center; margin-top: 1rem; font-style: italic; }
+    .sync-flash { animation: flashGreen 0.6s ease; }
+    @keyframes flashGreen { 0%{opacity:1} 30%{opacity:0.4} 100%{opacity:1} }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+  </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link">Skip to main content</a>
-<div class="app" role="application" aria-label="The Wellmate — Taylor Jordan">
+  <div class="page-label">The Wellmate — Age Well Tab · Design Mockup · v8</div>
 
-<!-- ── SIDEBAR desktop ── -->
-<nav class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-cairn"><div class="sc1"></div><div class="sc2"></div><div class="sc3"></div></div>
-    <div class="sb-wordmark"><span class="the">The</span><span class="wm">Wellmate™</span></div>
-  </div>
-  <div class="sb-user">
-    <div class="sb-av">TJ</div>
-    <div><div class="sb-uname">Taylor Jordan</div><div class="sb-urole">Member since Jan 2026</div></div>
-  </div>
-  <div class="sb-nav">
-    <button class="sb-item active" onclick="switchTab('today',this)"><span class="sb-dot" style="background:var(--pool)"></span>Today</button>
-    <button class="sb-item" onclick="switchTab('grow',this)"><span class="sb-dot" style="background:var(--wind)"></span>Grow</button>
-    <button class="sb-item" onclick="switchTab('care',this)"><span class="sb-dot" style="background:var(--glow)"></span>Care</button>
-    <button class="sb-item" onclick="switchTab('well',this)"><span class="sb-dot" style="background:#9B6DD6"></span>The Well</button>
-  </div>
-  <button class="sb-theme-toggle" id="theme-toggle-sidebar" onclick="toggleDark()" aria-label="Toggle dark mode">
-    <span id="theme-icon-sidebar">🌙</span>
-    <span id="theme-label-sidebar">Dark mode</span>
-  </button>
-</nav>
-
-<!-- ── TOPBAR mobile ── -->
-<div class="topbar">
-  <div class="tb-left">
-    <div class="tb-cairn"><div class="tc1"></div><div class="tc2"></div><div class="tc3"></div></div>
-    <div class="tb-wordmark"><span class="the">The</span><span class="wm">Wellmate™</span></div>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;">
-    <button class="theme-toggle" id="theme-toggle-mobile" onclick="toggleDark()" aria-label="Toggle dark mode">
-      <span id="theme-icon-mobile">🌙</span>
-    </button>
-    <div class="tb-av">TJ</div>
-  </div>
-</div>
-<div class="accent-bar"></div>
-
-<!-- ── MAIN ── -->
-<div class="main-scroll" id="main-content" role="main">
-
-  <!-- ════════ TODAY ════════ -->
-  <div id="tab-today" class="tab-pane active">
-
-    <!-- Active goals -->
-    <div class="goal-section">
-      <div class="goal-section-header">
-        <span class="eyebrow" style="margin-bottom:0;">Your active goals</span>
-        <span style="font-size:10px;color:var(--pool);cursor:pointer;">Edit</span>
+  <div class="aw">
+    <div class="top-card">
+      <div class="top-title">
+        Small habits, real time.
+        <i class="ti ti-info-circle" aria-hidden="true" style="font-size:15px;color:#4D545E;font-weight:400;"></i>
       </div>
-      <div class="goal-cards">
+      <div class="insight-row">
+        <div class="insight-box" onclick="openPopup('p1')">
+          <div class="insight-icon pool"><i class="ti ti-heart-rate-monitor" aria-hidden="true"></i></div>
+          <div class="insight-label">Healthspan vs Lifespan</div>
+        </div>
+        <div class="insight-box" onclick="openPopup('p2')">
+          <div class="insight-icon wind"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
+          <div class="insight-label">Your hidden power</div>
+        </div>
+        <div class="insight-box" onclick="openPopup('p3')">
+          <div class="insight-icon glow"><i class="ti ti-trending-up" aria-hidden="true"></i></div>
+          <div class="insight-label">Small actions add up</div>
+        </div>
+      </div>
+      <div class="day-label">Your daily habits are earning you</div>
+      <div class="minutes-hero">
+        <span class="minutes-big" id="hero-total">~16</span>
+        <span class="minutes-suffix">minutes of healthspan per day</span>
+      </div>
+      <div class="minutes-subline">broken down across your four health domains — <strong>update your check-in to see this number grow.</strong></div>
+      <div class="bar-row">
+        <div class="bar-dot" style="background:#00A386;"></div>
+        <div class="bar-domain">Move</div>
+        <div class="bar-track"><div class="bar-fill" id="top-bar-move" style="background:#00A386;width:56%;"></div></div>
+        <div class="bar-val" id="top-val-move" style="color:#00A386;">~9 min</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-dot" style="background:#0093BF;"></div>
+        <div class="bar-domain">Mind</div>
+        <div class="bar-track"><div class="bar-fill" id="top-bar-mind" style="background:#0093BF;width:35%;"></div></div>
+        <div class="bar-val" id="top-val-mind" style="color:#0093BF;">~5 min</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-dot" style="background:#052C22;"></div>
+        <div class="bar-domain">Live</div>
+        <div class="bar-track"><div class="bar-fill" id="top-bar-live" style="background:#052C22;width:12%;"></div></div>
+        <div class="bar-val" id="top-val-live" style="color:#052C22;">~2 min</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-dot" style="background:#FAAE3C;"></div>
+        <div class="bar-domain">Connect</div>
+        <div class="bar-track"><div class="bar-fill" id="top-bar-connect" style="background:#FAAE3C;width:0%;"></div></div>
+        <div class="bar-val" id="top-val-connect" style="color:#D3DAE5;">— min</div>
+      </div>
+      <div class="checkin-row">
+        <div class="last-checkin" id="checkin-timestamp"><i class="ti ti-clock" aria-hidden="true" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>Last check-in: 4 days ago</div>
+        <button class="btn-primary" id="checkin-btn" onclick="syncCheckin()">
+          <i class="ti ti-refresh" aria-hidden="true" style="font-size:14px;" id="sync-icon"></i>
+          Update My Check-in
+        </button>
+      </div>
+    </div>
 
-        <div class="goal-card goal-card-active" id="goal-energy" onclick="openModal('modal-energy')" style="cursor:pointer;">
-          <div class="goal-card-top">
-            <div class="goal-card-icon" style="background:var(--pool-l);">⚡</div>
-            <div style="flex:1;">
-              <div class="goal-card-name">Feel energized throughout my day</div>
-              <div class="goal-card-desc">Maintain consistent energy and avoid afternoon crashes</div>
+    <div class="divider"></div>
+    <div class="section-title">What adds to your minutes</div>
+    <div class="section-sub">Each behavior below is normalized to a daily average. Weekly habits are divided by 7; monthly habits by 30 — so every domain tells the same story in the same unit.</div>
+
+    <div class="domains-wrap">
+
+      <div class="domain-row move-d" id="dr-move">
+        <div class="domain-header" onclick="toggleD('dr-move')">
+          <div class="d-icon"><i class="ti ti-run" aria-hidden="true" style="color:#00A386;"></i></div>
+          <div class="d-name">Move</div>
+          <div class="d-mins-inline" style="color:#00A386;" id="mm-move">~9 <span class="unit">min/day</span></div>
+          <div><div class="d-bar-inline"><div class="d-bar-fill-inline" id="db-move" style="background:#00A386;width:56%;"></div></div></div>
+          <div class="d-chevron"><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
+        </div>
+        <div class="domain-detail">
+          <div class="acts-header"><span></span><span class="acts-col-left">Behavior</span><span class="acts-col-right">Log action for the:</span></div>
+          <div class="act">
+            <div class="chk on" data-d="move" data-v="3.9" data-color="#00A386" style="background:#00A386;border-color:#00A386;color:#fff;">✓</div>
+            <div class="act-text">150+ min moderate aerobic activity per week <span class="act-contrib" style="color:#00A386;">+3.9 min/day</span></div>
+            <div class="cadence-pills" data-color="#00A386">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#00A386;"><span style="background:#00A386;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
             </div>
           </div>
-          <div class="goal-state-row">
-            <div class="goal-state-dot" style="background:var(--wind);"></div>
-            <span class="goal-state-lbl" style="color:#0A5C7A;">Strengthening</span>
-            <span class="goal-state-divider">·</span>
-            <span class="goal-milestone-txt">1 of 3 milestones reached</span>
-          </div>
-          <div class="goal-progress"><div class="goal-progress-fill" style="width:33%;background:var(--wind);"></div></div>
-          <div class="goal-card-footer">
-            <span class="goal-milestone-detail">Next: Track energy crash–free for 7 days</span>
-            <span class="goal-target">by May 14</span>
-          </div>
-          <div class="goal-sage-link">
-            <div class="gsl-dot"></div>
-            <span>Sage is focused on this goal today</span>
-          </div>
-        </div>
-
-        <div class="goal-card" id="goal-dinner" onclick="openModal('modal-dinner')" style="cursor:pointer;">
-          <div class="goal-card-top">
-            <div class="goal-card-icon" style="background:var(--glow-l);">🍽️</div>
-            <div style="flex:1;">
-              <div class="goal-card-name">Eat healthy family dinners</div>
-              <div class="goal-card-desc">Prepare nutritious meals together 5 nights a week</div>
+          <div class="act">
+            <div class="chk on" data-d="move" data-v="2.6" data-color="#00A386" style="background:#00A386;border-color:#00A386;color:#fff;">✓</div>
+            <div class="act-text">Strength or resistance training at least twice a week <span class="act-contrib" style="color:#00A386;">+2.6 min/day</span></div>
+            <div class="cadence-pills" data-color="#00A386">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#00A386;"><span style="background:#00A386;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
             </div>
           </div>
-          <div class="goal-state-row">
-            <div class="goal-state-dot" style="background:var(--pool);"></div>
-            <span class="goal-state-lbl" style="color:var(--pool-d);">Sustaining</span>
-            <span class="goal-state-divider">·</span>
-            <span class="goal-milestone-txt">2 of 3 milestones reached</span>
-          </div>
-          <div class="goal-progress"><div class="goal-progress-fill" style="width:67%;background:var(--pool);"></div></div>
-          <div class="goal-card-footer">
-            <span class="goal-milestone-detail">Next: Cook together 5 nights in a row</span>
-            <span class="goal-target">by Apr 30</span>
-          </div>
-        </div>
-
-        <div class="goal-card" id="goal-exercise" onclick="openModal('modal-exercise')" style="cursor:pointer;">
-          <div class="goal-card-top">
-            <div class="goal-card-icon" style="background:var(--wind-l);">🏃</div>
-            <div style="flex:1;">
-              <div class="goal-card-name">Regular exercise routine</div>
-              <div class="goal-card-desc">30 minutes of moderate exercise, 5 days a week</div>
+          <div class="act">
+            <div class="chk" data-d="move" data-v="1.9" data-color="#00A386"></div>
+            <div class="act-text">Daily step goal of 7,500 or more steps <span class="act-contrib" style="color:#4D545E;">+1.9 min/day</span></div>
+            <div class="cadence-pills" data-color="#00A386">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#00A386;"><span style="background:#00A386;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
             </div>
           </div>
-          <div class="goal-state-row">
-            <div class="goal-state-dot" style="background:var(--wind);"></div>
-            <span class="goal-state-lbl" style="color:#0A5C7A;">Strengthening</span>
-            <span class="goal-state-divider">·</span>
-            <span class="goal-milestone-txt">2 of 3 milestones reached</span>
+          <div class="act">
+            <div class="chk" data-d="move" data-v="0.6" data-color="#00A386"></div>
+            <div class="act-text">Dedicated flexibility or mobility practice <span class="act-contrib" style="color:#4D545E;">+0.6 min/day</span></div>
+            <div class="cadence-pills" data-color="#00A386">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#00A386;"><span style="background:#00A386;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
           </div>
-          <div class="goal-progress"><div class="goal-progress-fill" style="width:67%;background:var(--wind);"></div></div>
-          <div class="goal-card-footer">
-            <span class="goal-milestone-detail">Next: Exercise 5 days this week</span>
-            <span class="goal-target">by May 9</span>
+          <div class="detail-footer"><div class="cite"><div class="cite-dot" style="background:#00A386;"></div>WHO Physical Activity Guidelines · Kaplan et al. meta-analysis</div></div>
+        </div>
+      </div>
+
+      <div class="domain-row mind-d" id="dr-mind">
+        <div class="domain-header" onclick="toggleD('dr-mind')">
+          <div class="d-icon"><i class="ti ti-brain" aria-hidden="true" style="color:#0093BF;"></i></div>
+          <div class="d-name">Mind</div>
+          <div class="d-mins-inline" style="color:#0093BF;" id="mm-mind">~5 <span class="unit">min/day</span></div>
+          <div><div class="d-bar-inline"><div class="d-bar-fill-inline" id="db-mind" style="background:#0093BF;width:35%;"></div></div></div>
+          <div class="d-chevron"><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
+        </div>
+        <div class="domain-detail">
+          <div class="acts-header"><span></span><span class="acts-col-left">Behavior</span><span class="acts-col-right">Log action for the:</span></div>
+          <div class="act">
+            <div class="chk on" data-d="mind" data-v="2.1" data-color="#0093BF" style="background:#0093BF;border-color:#0093BF;color:#fff;">✓</div>
+            <div class="act-text">Seven to nine hours of quality sleep each night <span class="act-contrib" style="color:#0093BF;">+2.1 min/day</span></div>
+            <div class="cadence-pills" data-color="#0093BF">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#0093BF;"><span style="background:#0093BF;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
           </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Sage moment — visually connected to goal above -->
-    <div class="sage-moment">
-      <div class="sm-from">
-        <div class="sm-av"><div class="sm-av-dot"></div></div>
-        <span class="sm-from-lbl">Sage · working on <strong style="color:rgba(0,163,134,.8);">Feel energized throughout my day</strong></span>
-      </div>
-      <div class="sm-celebration">Yesterday you skipped the afternoon snack — and <strong>made it to dinner fully present.</strong> That's the connection your energy goal has been waiting for.</div>
-      <div class="sm-action-lbl">One thing today</div>
-      <div class="sm-action">
-        <div class="sm-action-text">15-minute walk after dinner</div>
-        <div class="sm-action-why">Movement in the 30–60 min after eating compounds yesterday's win — and moves your energy goal forward.</div>
-      </div>
-      <div class="sm-btns">
-        <button class="sm-btn sm-btn-yes" onclick="markDone(this)">I'll do it</button>
-        <button class="sm-btn sm-btn-skip" onclick="skipAction(this)">Not today</button>
-      </div>
-    </div>
-
-    <!-- Tree — clickable to Grow tab -->
-    <button class="tree-row" onclick="switchTab('grow', document.querySelector('.bn-item:nth-child(2)'))" aria-label="View your Longevity Optimizer in the Grow tab — Stage 2, 68 of 100 points">
-      <div class="tree-visual">
-        <svg width="60" height="70" viewBox="0 0 60 70" fill="none" aria-hidden="true">
-          <rect x="27" y="48" width="7" height="17" rx="3.5" fill="#5C3D2E"/>
-          <ellipse cx="30" cy="38" rx="14" ry="11" fill="#1A6B4A" opacity=".92"/>
-          <ellipse cx="30" cy="30" rx="11" ry="8.5" fill="#2D8C61" opacity=".88"/>
-          <ellipse cx="30" cy="24" rx="8" ry="6.5" fill="#52B57A" opacity=".85"/>
-          <ellipse cx="18" cy="36" rx="7" ry="6" fill="#1F7A52" opacity=".75"/>
-          <ellipse cx="42" cy="36" rx="7" ry="6" fill="#1F7A52" opacity=".75"/>
-          <circle cx="24" cy="21" r="2" fill="#FAAE3C" opacity=".9"/>
-          <circle cx="34" cy="18" r="1.8" fill="#FAAE3C" opacity=".8"/>
-        </svg>
-        <div class="tree-stage">Young &amp; growing</div>
-      </div>
-      <div class="tree-info">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-          <div class="tree-stat">Stage 2 · 8 to next</div>
-          <div id="tree-pts-today" style="font-size:13px;font-weight:500;color:var(--pool);">+3 pts today 🌱</div>
-        </div>
-        <div class="tree-progress" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-label="Tree growth progress: 68 of 100 points"><div id="tree-progress-fill" class="tree-progress-fill" style="width:68%"></div></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
-          <div class="tree-next"><strong id="tree-pts-remaining">5 more pts</strong> to Flourishing</div>
-          <div style="font-size:12px;color:var(--text-secondary);">68 / 100 pts</div>
-        </div>
-        <div class="tree-grow-hint"><span>See full Grow tab</span><span class="tree-grow-hint-arrow" aria-hidden="true">→</span></div>
-      </div>
-    </button>
-
-    <!-- Behaviors — each tagged to a goal -->
-    <div class="card" style="margin-top:12px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-        <span class="eyebrow" style="margin-bottom:0;">Today's behaviors</span>
-        <span id="behav-count-lbl" style="font-size:10px;color:var(--pool);font-weight:500;">3 of 6 done</span>
-      </div>
-      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Each behavior earns growth points and moves your goals forward. <span style="color:var(--pool);font-weight:500;">Tap the tree above to explore your Grow tab.</span></div>
-      <div class="behav-list" id="today-behav-list" role="list" aria-label="Today's health behaviors"></div>
-      <div id="streak-bonus" style="display:none;margin-top:10px;background:var(--glow-l);border:1px solid var(--glow);border-radius:var(--radius-sm);padding:9px 12px;align-items:center;gap:8px;">
-        <span style="font-size:16px;">🔥</span>
-        <div><div style="font-size:11px;font-weight:500;color:#8A5A00;">Streak bonus unlocked!</div><div style="font-size:12px;color:#8A5A00;margin-top:1px;">All 6 done · +3 bonus pts added to your tree</div></div>
-      </div>
-    </div>
-
-  </div><!-- /today -->
-
-  <!-- ════════ GROW ════════ -->
-  <div id="tab-grow" class="tab-pane" role="region" aria-label="Grow tab">
-
-    <!-- Echo from Today's tree -->
-    <div class="grow-echo" role="status" aria-label="Tree progress summary">
-      <div class="grow-echo-tree" aria-hidden="true">
-        <svg width="36" height="42" viewBox="0 0 36 42" fill="none">
-          <rect x="16" y="29" width="4" height="10" rx="2" fill="#5C3D2E"/>
-          <ellipse cx="18" cy="23" rx="9" ry="7" fill="#1A6B4A" opacity=".92"/>
-          <ellipse cx="18" cy="18" rx="7" ry="5.5" fill="#2D8C61" opacity=".88"/>
-          <ellipse cx="18" cy="14" rx="5" ry="4" fill="#52B57A" opacity=".85"/>
-          <circle cx="14" cy="12" r="1.5" fill="#FAAE3C" opacity=".9"/>
-          <circle cx="21" cy="10" r="1.2" fill="#FAAE3C" opacity=".8"/>
-        </svg>
-      </div>
-      <div class="grow-echo-text">
-        <div class="grow-echo-title">Your tree earned +3 pts today</div>
-        <div class="grow-echo-sub">Stage 2 · 68/100 pts · 5 more to Flourishing. Every behavior you checked off on Today grew this tree.</div>
-      </div>
-    </div>
-
-    <span class="eyebrow">Longevity Optimizer</span>
-    <div class="section-title">How your actions add up</div>
-
-    <!-- Tree card -->
-    <div class="grow-tree-card">
-      <div class="grow-tree-layout">
-        <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;">
-          <svg width="90" height="104" viewBox="0 0 90 104" fill="none">
-            <rect x="40" y="72" width="10" height="26" rx="5" fill="#5C3D2E"/>
-            <path d="M45 98 Q36 102 30 100" stroke="#5C3D2E" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <path d="M45 98 Q54 102 60 100" stroke="#5C3D2E" stroke-width="2" stroke-linecap="round" fill="none"/>
-            <ellipse cx="45" cy="59" rx="22" ry="16" fill="#1A6B4A" opacity=".92"/>
-            <ellipse cx="45" cy="47" rx="17" ry="13" fill="#2D8C61" opacity=".88"/>
-            <ellipse cx="45" cy="37" rx="13" ry="10" fill="#52B57A" opacity=".85"/>
-            <ellipse cx="28" cy="56" rx="11" ry="9" fill="#1F7A52" opacity=".78"/>
-            <ellipse cx="62" cy="56" rx="11" ry="9" fill="#1F7A52" opacity=".78"/>
-            <ellipse cx="34" cy="42" rx="8" ry="7" fill="#2D8C61" opacity=".72"/>
-            <ellipse cx="56" cy="42" rx="8" ry="7" fill="#2D8C61" opacity=".72"/>
-            <ellipse cx="40" cy="32" rx="5" ry="4" fill="#7DCFA0" opacity=".45"/>
-            <circle cx="36" cy="28" r="3" fill="#FAAE3C" opacity=".88"/>
-            <circle cx="50" cy="25" r="2.5" fill="#FAAE3C" opacity=".78"/>
-            <circle cx="61" cy="50" r="2" fill="#0093BF" opacity=".72"/>
-          </svg>
-          <div class="grow-tree-stage">Young &amp; growing · Stage 2</div>
-        </div>
-        <div class="grow-tree-right">
-          <div style="display:flex;gap:0;border:1px solid var(--mist);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:10px;">
-            <div style="flex:1;padding:8px 10px;text-align:center;border-right:1px solid var(--mist);"><div style="font-family:'Lora',serif;font-size:18px;font-weight:500;color:var(--shale);line-height:1;">11</div><div style="font-size:11px;color:var(--river);margin-top:2px;">day streak</div></div>
-            <div style="flex:1;padding:8px 10px;text-align:center;border-right:1px solid var(--mist);"><div style="font-family:'Lora',serif;font-size:18px;font-weight:500;color:var(--pool);line-height:1;">52</div><div style="font-size:11px;color:var(--river);margin-top:2px;">of 92 active</div></div>
-            <div style="flex:1;padding:8px 10px;text-align:center;"><div style="font-family:'Lora',serif;font-size:18px;font-weight:500;color:var(--wind);line-height:1;">+3</div><div style="font-size:11px;color:var(--river);margin-top:2px;">today</div></div>
+          <div class="act">
+            <div class="chk on" data-d="mind" data-v="1.8" data-color="#0093BF" style="background:#0093BF;border-color:#0093BF;color:#fff;">✓</div>
+            <div class="act-text">Daily stress management practice (any method) <span class="act-contrib" style="color:#0093BF;">+1.8 min/day</span></div>
+            <div class="cadence-pills" data-color="#0093BF">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#0093BF;"><span style="background:#0093BF;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
           </div>
-          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:5px;">Next stage: <strong style="color:var(--shale);">Flourishing</strong></div>
-          <div class="tree-progress" style="margin-bottom:4px;"><div class="tree-progress-fill" style="width:68%"></div></div>
-          <div style="font-size:12px;color:var(--pool);font-weight:500;margin-bottom:8px;">68% there · 8 more behaviors</div>
-          <div class="grow-tree-stages">
-            <div class="stage-pip" style="background:var(--pool);"></div>
-            <div class="stage-pip" style="background:var(--pool);"></div>
-            <div class="stage-pip" style="background:var(--mist);"></div>
-            <div class="stage-pip" style="background:var(--mist);"></div>
-            <div class="stage-pip" style="background:var(--mist);"></div>
-            <div class="stage-pip" style="background:var(--mist);"></div>
-            <div class="stage-pip" style="background:var(--mist);"></div>
+          <div class="act">
+            <div class="chk" data-d="mind" data-v="0.7" data-color="#0093BF"></div>
+            <div class="act-text">Mindfulness or meditation for ten minutes or more <span class="act-contrib" style="color:#4D545E;">+0.7 min/day</span></div>
+            <div class="cadence-pills" data-color="#0093BF">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#0093BF;"><span style="background:#0093BF;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
           </div>
-          <div style="font-size:11px;color:var(--river);margin-top:3px;">7 stages total</div>
+          <div class="act">
+            <div class="chk" data-d="mind" data-v="0.4" data-color="#0093BF"></div>
+            <div class="act-text">Screen-free wind-down routine before bed <span class="act-contrib" style="color:#4D545E;">+0.4 min/day</span></div>
+            <div class="cadence-pills" data-color="#0093BF">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#0093BF;"><span style="background:#0093BF;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
+          </div>
+          <div class="detail-footer"><div class="cite"><div class="cite-dot" style="background:#0093BF;"></div>Walker sleep research · APA stress reduction studies</div></div>
         </div>
       </div>
-    </div>
 
-    <!-- Sage insight in Grow -->
-    <div class="sage-insight">
-      <div class="si-from"><div class="si-av"><div class="si-av-dot"></div></div><span class="si-lbl">Sage</span></div>
-      <div class="si-text">Your <strong>Medical Care domain</strong> is your biggest growth opportunity. Adding consistent medication tracking and scheduling your CGM discussion would move you from Building to Strengthening — and directly serve your energy goal.</div>
-    </div>
-
-
-
-    <!-- Growth Map -->
-    <div class="card">
-      <span class="eyebrow">Wellmate Growth Map™</span>
-      <div class="gm-state-center">
-        <div class="gm-state-label">Your growth state</div>
-        <div class="gm-state-value">Building Momentum</div>
-        <div class="gm-state-sub">Small actions today create lasting change.</div>
-      </div>
-      <div class="gm-quadrant">
-        <div class="gm-q active" data-domain="mind" onclick="showDomain('mind',this)">
-          <div class="gm-q-name">Mind &amp; purpose</div>
-          <div class="gm-q-state"><div class="gm-q-dot" style="background:var(--wind)"></div><span class="gm-q-state-lbl" style="color:#0A5C7A;">Strengthening</span></div>
-          <div class="gm-q-track"><div class="gm-q-fill" style="width:62%;background:var(--wind)"></div><div class="gm-q-needle" style="left:62%;background:var(--wind)"></div></div>
-          <div class="gm-q-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Grow</span><span style="color:var(--pool)">Sustain</span></div>
-          <div class="gm-q-peer"><span class="gm-q-peer-lbl">vs. peers</span><div class="gm-q-range"><div class="gm-q-range-fill" style="left:15%;width:70%;background:var(--wind)"></div><div class="gm-q-range-mid" style="left:50%"></div><div class="gm-q-range-dot" style="left:62%;background:var(--wind)"></div></div><span class="gm-q-dir" style="color:#0A5C7A;">↑</span></div>
+      <div class="domain-row live-d" id="dr-live">
+        <div class="domain-header" onclick="toggleD('dr-live')">
+          <div class="d-icon"><i class="ti ti-salad" aria-hidden="true" style="color:#052C22;"></i></div>
+          <div class="d-name">Live</div>
+          <div class="d-mins-inline" style="color:#052C22;" id="mm-live">~2 <span class="unit">min/day</span></div>
+          <div><div class="d-bar-inline"><div class="d-bar-fill-inline" id="db-live" style="background:#052C22;width:12%;"></div></div></div>
+          <div class="d-chevron"><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
         </div>
-        <div class="gm-q" data-domain="medical" onclick="showDomain('medical',this)">
-          <div class="gm-q-name">Medical care</div>
-          <div class="gm-q-state"><div class="gm-q-dot" style="background:var(--glow)"></div><span class="gm-q-state-lbl" style="color:#8A5A00;">Building</span></div>
-          <div class="gm-q-track"><div class="gm-q-fill" style="width:38%;background:var(--glow)"></div><div class="gm-q-needle" style="left:38%;background:var(--glow)"></div></div>
-          <div class="gm-q-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Grow</span><span style="color:var(--pool)">Sustain</span></div>
-          <div class="gm-q-peer"><span class="gm-q-peer-lbl">vs. peers</span><div class="gm-q-range"><div class="gm-q-range-fill" style="left:15%;width:70%;background:var(--glow)"></div><div class="gm-q-range-mid" style="left:50%"></div><div class="gm-q-range-dot" style="left:38%;background:var(--glow)"></div></div><span class="gm-q-dir" style="color:#8A5A00;">↓</span></div>
-        </div>
-        <div class="gm-q" data-domain="relationships" onclick="showDomain('relationships',this)">
-          <div class="gm-q-name">Relationships</div>
-          <div class="gm-q-state"><div class="gm-q-dot" style="background:var(--pool)"></div><span class="gm-q-state-lbl" style="color:var(--pool-d);">Sustaining</span></div>
-          <div class="gm-q-track"><div class="gm-q-fill" style="width:78%;background:var(--pool)"></div><div class="gm-q-needle" style="left:78%;background:var(--pool)"></div></div>
-          <div class="gm-q-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Grow</span><span style="color:var(--pool)">Sustain</span></div>
-          <div class="gm-q-peer"><span class="gm-q-peer-lbl">vs. peers</span><div class="gm-q-range"><div class="gm-q-range-fill" style="left:15%;width:70%;background:var(--pool)"></div><div class="gm-q-range-mid" style="left:50%"></div><div class="gm-q-range-dot" style="left:76%;background:var(--pool)"></div></div><span class="gm-q-dir" style="color:var(--pool-d);">↑↑</span></div>
-        </div>
-        <div class="gm-q" data-domain="lifestyle" onclick="showDomain('lifestyle',this)">
-          <div class="gm-q-name">Lifestyle</div>
-          <div class="gm-q-state"><div class="gm-q-dot" style="background:var(--wind)"></div><span class="gm-q-state-lbl" style="color:#0A5C7A;">Strengthening</span></div>
-          <div class="gm-q-track"><div class="gm-q-fill" style="width:51%;background:var(--wind)"></div><div class="gm-q-needle" style="left:51%;background:var(--wind)"></div></div>
-          <div class="gm-q-scale"><span style="color:var(--glow)">Build</span><span style="color:var(--wind)">Grow</span><span style="color:var(--pool)">Sustain</span></div>
-          <div class="gm-q-peer"><span class="gm-q-peer-lbl">vs. peers</span><div class="gm-q-range"><div class="gm-q-range-fill" style="left:15%;width:70%;background:var(--wind)"></div><div class="gm-q-range-mid" style="left:50%"></div><div class="gm-q-range-dot" style="left:50%;background:var(--wind)"></div></div><span class="gm-q-dir" style="color:#0A5C7A;">≈</span></div>
-        </div>
-      </div>
-      <div class="domain-detail" id="domain-detail">
-        <div class="dd-head">
-          <span class="dd-title" id="dd-title">Mind &amp; purpose</span>
-          <span style="font-size:12px;color:var(--text-secondary);">Today's behaviors in this domain</span>
-        </div>
-        <div id="dd-rows" class="dd-rows"></div>
-      </div>
-    </div>
-
-  </div><!-- /grow -->
-
-  <!-- ════════ CARE ════════ -->
-  <div id="tab-care" class="tab-pane">
-
-    <div class="care-section">
-      <span class="care-lbl">Insights from your care team</span>
-      <div class="insight-card hl">
-        <div class="insight-from">From <strong>Dr. Amara Osei</strong> · PCP</div>
-        <div class="insight-body">"Involving Taylor's family in building blood sugar–friendly meals connects her prediabetes reversal directly to what matters most to her."</div>
-        <div class="insight-action"><div><div class="insight-label">Refer to a metabolic dietitian</div><div class="insight-sub">2 matches near you</div></div><button class="btn btn-pool" style="flex-shrink:0;">See matches</button></div>
-      </div>
-      <div class="insight-card">
-        <div class="insight-from">From <strong>Dr. Amara Osei</strong> · PCP</div>
-        <div class="insight-body">"A CGM would help Taylor see how food choices affect energy — connecting what she eats to how she feels by 3pm."</div>
-        <div class="insight-action"><div><div class="insight-label">Discuss a CGM trial</div><div class="insight-sub">HbA1c 6.2% — clinically appropriate</div></div><button class="btn btn-wind" style="flex-shrink:0;">Ask Sage</button></div>
-      </div>
-      <div class="insight-card fl">
-        <div class="insight-from">From <strong>Dr. James Kim</strong> · Endocrinology · Apr 28</div>
-        <div class="insight-body">"Weight gain flagged in prediabetes context. Coordinating with Dr. Osei before next visit."</div>
-        <div class="insight-action"><div><div class="insight-label">Care team coordinating</div><div class="insight-sub">Aligning on your behalf</div></div><button class="btn btn-glow" style="flex-shrink:0;">View update</button></div>
-      </div>
-    </div>
-
-    <div class="care-section">
-      <span class="care-lbl">My care team</span>
-      <div class="provider-list">
-        <div class="prov-card"><div class="prov-av" style="background:#006B55;">AO</div><div><div class="prov-name">Dr. Amara Osei</div><div class="prov-role">Primary Care · PCP</div><div class="prov-last">Last visit Apr 30</div></div><div class="prov-right"><span class="pill pill-pool">Active</span><span class="prov-msg">Message</span></div></div>
-        <div class="prov-card"><div class="prov-av" style="background:#185FA5;">JK</div><div><div class="prov-name">Dr. James Kim</div><div class="prov-role">Endocrinology</div><div class="prov-last">Last visit Apr 28</div></div><div class="prov-right"><span class="pill pill-glow">Coordinating</span><span class="prov-msg">Message</span></div></div>
-        <div class="prov-card"><div class="prov-av" style="background:#5C3D8F;">PM</div><div><div class="prov-name">Priya Mehta, LCSW</div><div class="prov-role">Behavioral Health</div><div class="prov-last">Last visit May 1</div></div><div class="prov-right"><span class="pill pill-pool">Active</span><span class="prov-msg">Message</span></div></div>
-        <div class="prov-card"><div class="prov-av" style="background:#8B6343;">MW</div><div><div class="prov-name">Marcus Webb, DPT</div><div class="prov-role">Physical Therapy</div><div class="prov-last">Last visit Apr 22</div></div><div class="prov-right"><span class="pill pill-pool">Active</span><span class="prov-msg">Message</span></div></div>
-      </div>
-    </div>
-
-    <div class="care-section">
-      <span class="care-lbl">Upcoming appointments</span>
-      <div class="appt-list">
-        <div class="appt-card"><div class="appt-date"><div class="appt-month">May</div><div class="appt-day">15</div></div><div class="appt-body"><div class="appt-name">Annual wellness visit</div><div class="appt-who">Dr. Amara Osei · PCP</div><div class="appt-time">10:30 AM · Northside Medical</div><div class="appt-type">In-person · 45 min</div><div class="appt-btns"><button class="appt-btn pool">Prepare with Sage</button><button class="appt-btn neutral">Reschedule</button></div></div></div>
-        <div class="appt-card"><div class="appt-date"><div class="appt-month">May</div><div class="appt-day">19</div></div><div class="appt-body"><div class="appt-name">CBT session</div><div class="appt-who">Priya Mehta, LCSW</div><div class="appt-time">2:00 PM · Telehealth</div><div class="appt-type">Video · 50 min</div><div class="appt-btns"><button class="appt-btn pool">Join video call</button><button class="appt-btn neutral">Reschedule</button></div></div></div>
-      </div>
-    </div>
-
-    <div class="care-section">
-      <span class="care-lbl">Find a provider</span>
-      <div class="search-bar"><span style="font-size:13px;color:var(--river);">🔍</span><input class="search-input" type="text" placeholder="Search specialty, name, or condition…"/></div>
-      <div class="filter-chips"><span class="pill pill-pool">✓ Accepts insurance</span><span class="pill pill-pool">✓ Prediabetes</span><span class="pill pill-wind">Dallas, TX</span><span class="pill pill-mist">Telehealth</span></div>
-      <div class="ref-card best">
-        <div class="ref-best-tag">Best match</div>
-        <div class="ref-name">Dr. Sofia Reyes, RD, CDCES</div>
-        <div class="ref-spec">Metabolic Dietitian · Diabetes Prevention</div>
-        <div class="ref-meta"><span class="pill pill-pool">Accepts insurance</span><span class="pill pill-mist">2.4 mi</span><span style="font-size:12px;color:var(--text-secondary);">⭐ 4.9 · 84 reviews</span></div>
-        <div class="ref-tags"><span class="ref-tag">Prediabetes reversal</span><span class="ref-tag">Family meal planning</span><span class="ref-tag">Telehealth</span></div>
-        <div class="ref-why">
-          <div class="ref-why-lbl">Why she's a match for you</div>
-          <div class="ref-why-row"><div class="ref-why-dot"></div>Specializes in prediabetes reversal through family meal planning — your #1 goal.</div>
-          <div class="ref-why-row"><div class="ref-why-dot"></div>Dr. Osei has referred to her before for similar patients.</div>
-          <div class="ref-why-row"><div class="ref-why-dot"></div>Evening telehealth slots available — fits your schedule.</div>
-        </div>
-        <button class="ref-btn">Request appointment →</button>
-      </div>
-      <div class="ref-card">
-        <div class="ref-name">Marcus Chen, RD</div>
-        <div class="ref-spec">Registered Dietitian · Integrative Nutrition</div>
-        <div class="ref-meta"><span class="pill pill-pool">Accepts insurance</span><span class="pill pill-mist">4.1 mi</span><span style="font-size:12px;color:var(--text-secondary);">⭐ 4.7 · 51 reviews</span></div>
-        <div class="ref-tags"><span class="ref-tag">Blood sugar</span><span class="ref-tag">Weight management</span><span class="ref-tag">In-person &amp; telehealth</span></div>
-        <div class="ref-why">
-          <div class="ref-why-lbl">Why he's a match</div>
-          <div class="ref-why-row"><div class="ref-why-dot"></div>Sustainable behavior change, not restrictive diets.</div>
-          <div class="ref-why-row"><div class="ref-why-dot"></div>Works frequently with Dr. Kim's endocrinology patients.</div>
-        </div>
-        <button class="ref-btn">Request appointment →</button>
-      </div>
-    </div>
-
-  </div><!-- /care -->
-
-  <!-- ════════ THE WELL ════════ -->
-  <div id="tab-well" class="tab-pane">
-
-    <div class="well-hero">
-      <div class="well-rings"><div class="well-ring-inner"><div class="well-center-dot"></div></div></div>
-      <div class="well-title">The Well</div>
-      <div class="well-sub">Connect with people working toward the same goals — not followers, not strangers. A small circle whose thriving is bound up with yours.</div>
-      <div class="well-avatars">
-        <div class="well-av" style="background:#006B55;">SL</div>
-        <div class="well-av" style="background:#185FA5;">MR</div>
-        <div class="well-av" style="background:#5C3D8F;">JT</div>
-      </div>
-      <div class="well-count">Join a small circle of people working toward similar goals near you</div>
-      <button class="well-cta">Join the waitlist →</button>
-    </div>
-
-    <span class="eyebrow" style="margin-bottom:10px;">Goals you could connect around</span>
-    <div class="well-goal-item"><div class="well-goal-icon" style="background:var(--pool-l);">🍽️</div><div style="flex:1;"><div class="well-goal-name">Blood sugar–friendly family meals</div><div class="well-goal-count">8 members · Dallas area</div></div><button class="well-goal-btn">Notify me</button></div>
-    <div class="well-goal-item"><div class="well-goal-icon" style="background:var(--wind-l);">⚡</div><div style="flex:1;"><div class="well-goal-name">Afternoon energy without crashes</div><div class="well-goal-count">5 members · Dallas area</div></div><button class="well-goal-btn">Notify me</button></div>
-    <div class="well-goal-item"><div class="well-goal-icon" style="background:var(--glow-l);">🔄</div><div style="flex:1;"><div class="well-goal-name">Prediabetes reversal</div><div class="well-goal-count">12 members · Dallas area</div></div><button class="well-goal-btn">Notify me</button></div>
-
-    <div class="well-coming-note" style="margin-top:12px;">
-      <div class="well-coming-badge"><div class="well-coming-dot"></div>Coming soon</div>
-      <div class="well-coming-text">Share milestones, encourage each other, take on group challenges, and refer providers you trust — all within a privacy-first community grounded in your real health goals.</div>
-    </div>
-
-  </div><!-- /well -->
-
-</div><!-- /main-scroll -->
-
-<!-- ── BOTTOM NAV mobile ── -->
-<nav class="bottom-nav">
-  <button class="bn-item active" onclick="switchTab('today',this)">
-    <div class="bn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="20" height="20"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-    <span class="bn-label">Today</span>
-  </button>
-  <button class="bn-item" onclick="switchTab('grow',this)">
-    <div class="bn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="20" height="20"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-    <span class="bn-label">Grow</span>
-  </button>
-  <button class="bn-item" onclick="switchTab('care',this)">
-    <div class="bn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="20" height="20"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 7.81 2 2 0 015 5.67h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L9.09 13a16 16 0 006.29 6.29l1.42-1.42a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 20z"/></svg></div>
-    <span class="bn-label">Care</span>
-  </button>
-  <button class="bn-item" onclick="switchTab('well',this)">
-    <div class="bn-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></div>
-    <span class="bn-label">The Well</span>
-  </button>
-</nav>
-
-</div><!-- /app -->
-
-<script>
-// ── SHARED BEHAVIOR MODEL ──
-// Single source of truth. Both Today tab and Grow tab domain panels read from here.
-const BEHAVIORS = [
-  {
-    id:'b1', text:'Skip afternoon high-carb snack',
-    pts:2, done:true,
-    domain:'lifestyle', domainLabel:'Lifestyle',
-    goal:'energized', goalLabel:'⚡ Feel energized',
-    why:'Skipping the 2pm carb spike stops the blood sugar crash that steals your evenings.',
-    cta:'Mark done'
-  },
-  {
-    id:'b2', text:'Take Lisinopril 10mg',
-    pts:1, done:true,
-    domain:'medical', domainLabel:'Medical Care',
-    goal:'energized', goalLabel:'⚡ Feel energized',
-    why:'Consistent adherence keeps your blood pressure stable — directly supporting your energy goal.',
-    cta:'Log now'
-  },
-  {
-    id:'b3', text:'Vegetables with lunch',
-    pts:1, done:true,
-    domain:'lifestyle', domainLabel:'Lifestyle',
-    goal:'dinners', goalLabel:'🍽️ Healthy dinners',
-    why:'Building the veggie habit at lunch reinforces the family dinner goal — same skill, different meal.',
-    cta:'Mark done'
-  },
-  {
-    id:'b4', text:'15-min walk after dinner',
-    pts:2, done:false,
-    domain:'lifestyle', domainLabel:'Lifestyle',
-    goal:'exercise', goalLabel:'🏃 Exercise routine',
-    goalSecondary:'energized', goalSecondaryLabel:'⚡ Feel energized',
-    why:'Post-meal movement is the highest-value behavior for blood sugar clearance and evening energy — two goals, one action.',
-    cta:'Mark done'
-  },
-  {
-    id:'b5', text:'5-min stress release before bed',
-    pts:1, done:false,
-    domain:'mind', domainLabel:'Mind & Purpose',
-    goal:'energized', goalLabel:'⚡ Feel energized',
-    why:'Work stress is compounding your energy crashes. Even 5 minutes of intentional release lowers cortisol before sleep.',
-    cta:'Mark done'
-  },
-  {
-    id:'b6', text:'Reflect on today\'s energy',
-    pts:1, done:false,
-    domain:'mind', domainLabel:'Mind & Purpose',
-    goal:'energized', goalLabel:'⚡ Feel energized',
-    why:'Reflection builds sense of agency — your score has grown 20% over 4 weeks of consistent entries.',
-    cta:'Reflect now'
-  }
-];
-
-// Domain metadata
-const DOMAIN_META = {
-  mind:    {title:'Mind &amp; purpose', color:'var(--wind)'},
-  medical: {title:'Medical care',       color:'var(--glow)'},
-  relationships: {title:'Relationships &amp; environment', color:'var(--pool)'},
-  lifestyle: {title:'Lifestyle',        color:'var(--wind)'}
-};
-
-// ── RENDER Today behavior list from BEHAVIORS ──
-function renderTodayBehaviors(){
-  const list = document.getElementById('today-behav-list');
-  if(!list) return;
-  list.innerHTML = BEHAVIORS.map(b => {
-    const isDone = b.done;
-    const secondaryTag = b.goalSecondaryLabel
-      ? `<span class="behav-goal-tag-secondary" style="font-size:11px;color:var(--text-tertiary);">also ${b.goalSecondaryLabel}</span>`
-      : '';
-    return `<div class="behav-item${isDone?' done':''}" role="listitem"
-      onclick="toggleBehavById('${b.id}',this)"
-      data-id="${b.id}" data-pts="${b.pts}"
-      aria-checked="${isDone}"
-      tabindex="0"
-      onkeydown="if(event.key==='Enter'||event.key===' '){toggleBehavById('${b.id}',this);event.preventDefault();}">
-      <div class="behav-check" aria-hidden="true"><div class="behav-check-mark"></div></div>
-      <div class="behav-body">
-        <span class="behav-text">${b.text}</span>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
-          <span class="behav-goal-tag">${b.goalLabel}</span>
-          <span style="font-size:11px;color:var(--text-tertiary);">${b.domainLabel}</span>
-          ${secondaryTag}
+        <div class="domain-detail">
+          <div class="acts-header"><span></span><span class="acts-col-left">Behavior</span><span class="acts-col-right">Log action for the:</span></div>
+          <div class="act">
+            <div class="chk on" data-d="live" data-v="0.8" data-color="#052C22" style="background:#052C22;border-color:#052C22;color:#fff;">✓</div>
+            <div class="act-text">Whole foods, vegetable-rich diet most days <span class="act-contrib" style="color:#052C22;">+0.8 min/day</span></div>
+            <div class="cadence-pills" data-color="#052C22">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#052C22;"><span style="background:#052C22;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk on" data-d="live" data-v="0.7" data-color="#052C22" style="background:#052C22;border-color:#052C22;color:#fff;">✓</div>
+            <div class="act-text">Adequate daily protein intake for your body weight <span class="act-contrib" style="color:#052C22;">+0.7 min/day</span></div>
+            <div class="cadence-pills" data-color="#052C22">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#052C22;"><span style="background:#052C22;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk" data-d="live" data-v="0.3" data-color="#052C22"></div>
+            <div class="act-text">Alcohol consumption within low-risk guidelines <span class="act-contrib" style="color:#4D545E;">+0.3 min/day</span></div>
+            <div class="cadence-pills" data-color="#052C22">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#052C22;"><span style="background:#052C22;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk" data-d="live" data-v="0.2" data-color="#052C22"></div>
+            <div class="act-text">Non-smoking and tobacco-free <span class="act-contrib" style="color:#4D545E;">+0.2 min/day</span></div>
+            <div class="cadence-pills" data-color="#052C22">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#052C22;"><span style="background:#052C22;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Month</span>
+            </div>
+          </div>
+          <div class="detail-footer"><div class="cite"><div class="cite-dot" style="background:#052C22;"></div>PREDIMED trial · Nurses' Health Study · GBD dietary analysis</div></div>
         </div>
       </div>
-      <span class="behav-pts${isDone?' done-pts':''}" aria-label="${b.pts} point${b.pts>1?'s':''} ${isDone?'earned':'available'}">${b.pts>1?'+'+b.pts+' pts':'+'+b.pts+' pt'}</span>
-    </div>`;
-  }).join('');
-  syncBehavCount();
-}
 
-function toggleBehavById(id, el){
-  const b = BEHAVIORS.find(x=>x.id===id);
-  if(!b) return;
-  b.done = !b.done;
-  el.classList.toggle('done', b.done);
-  el.setAttribute('aria-checked', b.done);
-  const pts = el.querySelector('.behav-pts');
-  if(pts) pts.classList.toggle('done-pts', b.done);
-  syncBehavCount();
-  syncTreePts();
-  // Refresh domain panel if open and matches this behavior's domain
-  const activeCard = document.querySelector('.gm-q.active');
-  if(activeCard) showDomain(activeCard.dataset.domain, activeCard);
-}
-
-function syncBehavCount(){
-  const done = BEHAVIORS.filter(b=>b.done).length;
-  const lbl = document.getElementById('behav-count-lbl');
-  if(lbl) lbl.textContent = done+' of '+BEHAVIORS.length+' done';
-  const bonus = document.getElementById('streak-bonus');
-  if(bonus) bonus.style.display = done===BEHAVIORS.length ? 'flex':'none';
-}
-
-function syncTreePts(){
-  const todayPts = BEHAVIORS.filter(b=>b.done).reduce((s,b)=>s+b.pts,0);
-  const el = document.getElementById('tree-pts-today');
-  if(el) el.textContent = '+'+todayPts+' pts today 🌱';
-  const BASE=68, MAX=100;
-  const total = Math.min(BASE+todayPts, MAX);
-  const fill = document.getElementById('tree-progress-fill');
-  if(fill){ fill.style.width=total+'%'; fill.closest('[role="progressbar"]')?.setAttribute('aria-valuenow',total); }
-  const rem = document.getElementById('tree-pts-remaining');
-  if(rem){ const left=Math.max(MAX-total,0); rem.textContent = left>0?left+' more pts':'0 pts'; }
-  const echoTitle = document.querySelector('.grow-echo-title');
-  if(echoTitle) echoTitle.textContent = 'Your tree earned +'+todayPts+' pts today';
-  const echoSub = document.querySelector('.grow-echo-sub');
-  if(echoSub){ const left=Math.max(MAX-total,0); echoSub.textContent='Stage 2 · '+total+'/100 pts · '+(left>0?left+' more to Flourishing':'Flourishing unlocked! 🎉')+'. Every behavior on Today grew this tree.'; }
-}
-
-// ── GROW TAB: show domain panel from shared BEHAVIORS ──
-function showDomain(id, card){
-  document.querySelectorAll('.gm-q').forEach(c=>{c.classList.remove('active'); c.dataset.domain='';});
-  card.classList.add('active');
-  card.dataset.domain = id;
-
-  const meta = DOMAIN_META[id];
-  document.getElementById('dd-title').innerHTML = meta ? meta.title : id;
-
-  const domainBehavs = BEHAVIORS.filter(b=>b.domain===id);
-  const rows = document.getElementById('dd-rows');
-
-  if(domainBehavs.length === 0){
-    rows.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);padding:8px 0;">No behaviors active today in this domain — <a href="#" onclick="switchTab('care',document.querySelector(\'.bn-item:nth-child(3)\'));return false;" style="color:var(--pool);">explore your care plan</a> to add some.</div>`;
-    return;
-  }
-
-  rows.innerHTML = domainBehavs.map(b=>{
-    const isDone = b.done;
-    const secondary = b.goalSecondaryLabel ? `<span style="font-size:11px;color:var(--text-tertiary);margin-left:4px;">also ${b.goalSecondaryLabel}</span>` : '';
-    return `<div class="dd-action-item${isDone?' done':''}"
-      onclick="toggleBehavById('${b.id}',document.querySelector(\'.behav-item[data-id=\"${b.id}\"\']'))"
-      style="cursor:pointer;">
-      <div class="behav-check" style="width:20px;height:20px;border-radius:6px;border:1.5px solid ${isDone?'var(--pool)':'var(--mist)'};flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${isDone?'var(--pool)':'var(--card)'};" aria-hidden="true">
-        ${isDone?'<div style=\"width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);\"></div>':''}
-      </div>
-      <div class="dd-action-body">
-        <div class="dd-action-text" style="${isDone?'color:var(--text-secondary);':''}}">${b.text}</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;">
-          <span style="font-size:11px;color:var(--pool);">${b.goalLabel}</span>${secondary}
+      <div class="domain-row connect-d" id="dr-connect">
+        <div class="domain-header" onclick="toggleD('dr-connect')">
+          <div class="d-icon"><i class="ti ti-users" aria-hidden="true" style="color:#c47f00;"></i></div>
+          <div class="d-name">Connect</div>
+          <div class="d-mins-inline" style="color:#c47f00;" id="mm-connect">— <span class="unit">min/day</span></div>
+          <div><div class="d-bar-inline"><div class="d-bar-fill-inline" id="db-connect" style="background:#FAAE3C;width:0%;"></div></div></div>
+          <div class="d-chevron"><i class="ti ti-chevron-down" aria-hidden="true"></i></div>
         </div>
-        <div class="dd-action-why">${b.why}</div>
+        <div class="domain-detail">
+          <div class="acts-header"><span></span><span class="acts-col-left">Behavior</span><span class="acts-col-right">Log action for the:</span></div>
+          <div class="act">
+            <div class="chk" data-d="connect" data-v="1.4" data-color="#FAAE3C"></div>
+            <div class="act-text">Meaningful social interaction at least once this week <span class="act-contrib" style="color:#4D545E;">+1.4 min/day</span></div>
+            <div class="cadence-pills" data-color="#FAAE3C">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#FAAE3C;"><span style="background:#FAAE3C;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk" data-d="connect" data-v="1.1" data-color="#FAAE3C"></div>
+            <div class="act-text">Three or more close, reciprocal relationships <span class="act-contrib" style="color:#4D545E;">+1.1 min/day</span></div>
+            <div class="cadence-pills" data-color="#FAAE3C">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#FAAE3C;"><span style="background:#FAAE3C;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk" data-d="connect" data-v="0.9" data-color="#FAAE3C"></div>
+            <div class="act-text">Clear sense of purpose or meaning in daily life <span class="act-contrib" style="color:#4D545E;">+0.9 min/day</span></div>
+            <div class="cadence-pills" data-color="#FAAE3C">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#FAAE3C;"><span style="background:#FAAE3C;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Month</span>
+            </div>
+          </div>
+          <div class="act">
+            <div class="chk" data-d="connect" data-v="0.7" data-color="#FAAE3C"></div>
+            <div class="act-text">Active involvement in a community or group <span class="act-contrib" style="color:#4D545E;">+0.7 min/day</span></div>
+            <div class="cadence-pills" data-color="#FAAE3C">
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Day</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot"></span>Week</span>
+              <span class="cpill" onclick="setPill(this)"><span class="cpill-dot on" style="border-color:#FAAE3C;"><span style="background:#FAAE3C;width:8px;height:8px;border-radius:50%;display:block;"></span></span>Month</span>
+            </div>
+          </div>
+          <div class="detail-footer"><div class="cite"><div class="cite-dot" style="background:#FAAE3C;"></div>Harvard Study of Adult Development · Holt-Lunstad meta-analysis</div></div>
+        </div>
       </div>
-      <span style="font-size:11px;font-weight:500;color:${isDone?'var(--pool)':'var(--text-tertiary)'};flex-shrink:0;">${b.pts>1?'+'+b.pts+' pts':'+'+b.pts+' pt'}</span>
-    </div>`;
-  }).join('');
-}
 
-
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.bn-item,.sb-item').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  document.querySelectorAll('.bn-item,.sb-item').forEach(b=>{
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');
-  });
-}
-
-
-function markDone(btn){
-  btn.textContent='✓ On it';
-  btn.style.background='var(--pool-d)';
-  btn.disabled=true;
-}
-
-function skipAction(btn){
-  btn.closest('.sm-action')?.style&&(btn.closest('.sage-moment').querySelector('.sm-action').style.opacity='.4');
-  btn.textContent='Skipped';
-  btn.disabled=true;
-}
-
-function openModal(id){
-  document.getElementById(id).classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function closeModal(id){
-  document.getElementById(id).classList.remove('open');
-  document.body.style.overflow='';
-}
-function closeModalOutside(e,id){
-  if(e.target===document.getElementById(id))closeModal(id);
-}
-
-// ── INIT ──
-document.addEventListener('DOMContentLoaded', function(){
-  renderTodayBehaviors();
-  syncTreePts();
-  // Show lifestyle domain by default (most behaviors)
-  const lifestyleCard = document.querySelector('.gm-q[data-domain="lifestyle"]');
-  if(lifestyleCard){
-    document.querySelectorAll('.gm-q').forEach(c=>c.classList.remove('active'));
-    lifestyleCard.classList.add('active');
-    showDomain('lifestyle', lifestyleCard);
-  }
-});
-</script>
-
-<!-- ══ GOAL MODALS ══ -->
-
-<!-- MODAL: Feel Energized -->
-<div class="modal-overlay" id="modal-energy" onclick="closeModalOutside(event,'modal-energy')">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-header" style="position:relative;">
-      <span class="modal-eyebrow">Feel energized throughout my day</span>
-      <div class="modal-title">Your energy plan</div>
-      <div class="modal-state-row"><div class="goal-state-dot" style="background:var(--wind);"></div><span class="goal-state-lbl" style="color:#0A5C7A;font-size:10px;">Strengthening</span><span class="goal-state-divider" style="font-size:10px;color:var(--text-tertiary);">·</span><span style="font-size:12px;color:var(--text-secondary);">1 of 3 milestones reached</span></div>
-      <div class="modal-close" onclick="closeModal('modal-energy')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-sage">
-        <div class="ms-from"><div class="ms-av"><div class="ms-dot"></div></div><span class="ms-lbl">Sage · why this matters</span></div>
-        <div class="ms-text">Your afternoon crashes aren't about willpower — they're about <strong>blood sugar spikes and drops.</strong> A high-carb snack at 2pm causes a spike, then a sharp drop by 3–4pm. That drop is what's stealing your evenings.</div>
-      </div>
-      <span class="modal-eyebrow" style="margin-top:4px;">Why skip the afternoon snack?</span>
-      <div class="focus-list">
-        <div class="focus-item"><div class="focus-icon" style="background:var(--glow-l);">📉</div><div><div class="focus-name">The spike-crash cycle</div><div class="focus-desc">High-carb snacks cause blood sugar to rise quickly, then fall sharply — triggering fatigue and brain fog within 90 minutes.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--pool-l);">🕒</div><div><div class="focus-name">Your prediabetes context</div><div class="focus-desc">With HbA1c at 6.2%, your body is slower to clear glucose. The afternoon window is when this is most disruptive to your energy.</div></div></div>
-      </div>
-      <div class="modal-divider"></div>
-      <span class="modal-eyebrow">Smart snacks if you need one</span>
-      <div class="focus-list">
-        <div class="focus-item"><div class="focus-icon" style="background:var(--pool-l);">🥑</div><div><div class="focus-name">Handful of nuts + apple slices</div><div class="focus-desc">Healthy fat and fiber slow glucose absorption — energy stays stable without a spike.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--wind-l);">🥚</div><div><div class="focus-name">Hard-boiled egg + cucumber</div><div class="focus-desc">Protein-first with near-zero glycemic impact. Keeps you full without disrupting blood sugar.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--glow-l);">🧀</div><div><div class="focus-name">String cheese + celery</div><div class="focus-desc">Quick, portable, satisfying. Fat content blunts any blood sugar response.</div></div></div>
-      </div>
-      <div class="modal-divider"></div>
-      <span class="modal-eyebrow">Milestones</span>
-      <div class="milestone-list">
-        <div class="milestone-item done"><div class="ms-check"><div class="ms-check-mark"></div></div><span class="ms-txt">Track afternoon energy for 3 days in a row</span></div>
-        <div class="milestone-item"><div class="ms-check"></div><span class="ms-txt">Crash-free afternoons for 7 consecutive days</span></div>
-        <div class="milestone-item"><div class="ms-check"></div><span class="ms-txt">CGM trial shows stable 3pm blood sugar readings</span></div>
-      </div>
     </div>
   </div>
-</div>
 
-<!-- MODAL: Healthy Family Dinners -->
-<div class="modal-overlay" id="modal-dinner" onclick="closeModalOutside(event,'modal-dinner')">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-header" style="position:relative;">
-      <span class="modal-eyebrow">Eat healthy family dinners</span>
-      <div class="modal-title">Your nutrition plan</div>
-      <div class="modal-state-row"><div class="goal-state-dot" style="background:var(--pool);"></div><span class="goal-state-lbl" style="color:var(--pool-d);font-size:10px;">Sustaining</span><span class="goal-state-divider" style="font-size:10px;color:var(--text-tertiary);">·</span><span style="font-size:12px;color:var(--text-secondary);">2 of 3 milestones reached</span></div>
-      <div class="modal-close" onclick="closeModal('modal-dinner')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="prov-note hl">
-        <div class="pn-from"><div class="pn-av" style="background:#006B55;">SR</div><div><div class="pn-name">Dr. Sofia Reyes, RD, CDCES</div><div class="pn-role">Metabolic Dietitian · referred by Dr. Osei</div></div></div>
-        <div class="pn-body">"Taylor's family dinners are her strongest motivator. Build meals around these five food groups — not as a diet, but as a framework her whole family can enjoy. Blood sugar–friendly doesn't mean boring."</div>
-        <div class="pn-date">Plan shared May 3, 2026</div>
+  <!-- Popups -->
+  <div class="popup-overlay" id="p1" onclick="closeOnBg(event,'p1')">
+    <div class="popup-box">
+      <button class="popup-close" onclick="closePopup('p1')">✕</button>
+      <div class="popup-title">Healthspan vs Lifespan</div>
+      <div class="popup-body">
+        <p>Living longer isn't the same as living well longer. Lifespan is how many years you live. Healthspan is how many of those years you spend in good health — active, independent, doing the things you care about.</p>
+        <p>The gap between the two has been growing. In the US, the average person lives to about 77, but only about 63 of those years are spent in good health. That's a 14-year gap where chronic conditions take over.</p>
+        <p>Age Well tracks both: life-minutes show how your choices extend your time, and quality-minutes show how they protect the quality of that time. The goal isn't just more years. It's more good years.</p>
       </div>
-      <span class="modal-eyebrow" style="margin-top:4px;">Foods to focus on</span>
-      <div class="focus-list">
-        <div class="focus-item"><div class="focus-icon" style="background:var(--pool-l);">🥦</div><div><div class="focus-name">Non-starchy vegetables</div><div class="focus-desc">Fill half the plate — broccoli, zucchini, spinach, peppers. High fiber slows glucose absorption.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--wind-l);">🐟</div><div><div class="focus-name">Lean proteins</div><div class="focus-desc">Salmon, chicken, turkey, legumes. Protein blunts blood sugar spikes and supports evening energy.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--glow-l);">🫘</div><div><div class="focus-name">Beans &amp; lentils</div><div class="focus-desc">High fiber, high protein, low glycemic. Easy to add to soups, tacos, salads.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--pool-l);">🫒</div><div><div class="focus-name">Healthy fats</div><div class="focus-desc">Olive oil, avocado, nuts. Reduce the glucose spike from carbs eaten in the same meal.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--surface);">🌾</div><div><div class="focus-name">Whole grains in small portions</div><div class="focus-desc">Brown rice, quinoa, oats — right-sized. A ½ cup with protein and vegetables causes minimal blood sugar impact.</div></div></div>
-      </div>
-      <div class="modal-divider"></div>
-      <span class="modal-eyebrow">Milestones</span>
-      <div class="milestone-list">
-        <div class="milestone-item done"><div class="ms-check"><div class="ms-check-mark"></div></div><span class="ms-txt">Cook a blood sugar–friendly dinner 3 nights in a row</span></div>
-        <div class="milestone-item done"><div class="ms-check"><div class="ms-check-mark"></div></div><span class="ms-txt">Involve family in one meal prep session</span></div>
-        <div class="milestone-item"><div class="ms-check"></div><span class="ms-txt">Cook together 5 nights in a row</span></div>
-      </div>
+      <div class="popup-stat"><div class="popup-stat-num pool">~14 years</div><div class="popup-stat-label">Average gap between lifespan and healthy life in the US</div></div>
+      <div class="popup-cta">Ready to see what your day is worth? ↓</div>
     </div>
   </div>
-</div>
-
-<!-- MODAL: Exercise Routine -->
-<div class="modal-overlay" id="modal-exercise" onclick="closeModalOutside(event,'modal-exercise')">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-header" style="position:relative;">
-      <span class="modal-eyebrow">Regular exercise routine</span>
-      <div class="modal-title">Your movement plan</div>
-      <div class="modal-state-row"><div class="goal-state-dot" style="background:var(--wind);"></div><span class="goal-state-lbl" style="color:#0A5C7A;font-size:10px;">Strengthening</span><span class="goal-state-divider" style="font-size:10px;color:var(--text-tertiary);">·</span><span style="font-size:12px;color:var(--text-secondary);">2 of 3 milestones reached</span></div>
-      <div class="modal-close" onclick="closeModal('modal-exercise')">✕</div>
-    </div>
-    <div class="modal-body">
-      <div class="prov-note hl">
-        <div class="pn-from"><div class="pn-av" style="background:#8B6343;">MW</div><div><div class="pn-name">Marcus Webb, DPT</div><div class="pn-role">Physical Therapist · Peachtree PT &amp; Wellness</div></div></div>
-        <div class="pn-body">"Taylor's lower back pain has been limiting her exercise but we're making good progress. I've designed a routine that protects her back while building consistency. The key right now is low-impact movement — daily walks and core work — before we progress to higher intensity."</div>
-        <div class="pn-date">Plan updated Apr 22, 2026</div>
+  <div class="popup-overlay" id="p2" onclick="closeOnBg(event,'p2')">
+    <div class="popup-box">
+      <button class="popup-close" onclick="closePopup('p2')">✕</button>
+      <div class="popup-title">You have more power than you think</div>
+      <div class="popup-body">
+        <p>Most people believe longevity is mostly genetic — you either got lucky or you didn't. The research tells a very different story.</p>
+        <p>Large twin studies and a major analysis of over 400 million family trees found that only about 20–25% of how long you live is explained by your genes. The rest — roughly 75–80% — comes down to what you do every day: how you move, what you eat, how you sleep, who you connect with, and how you handle stress.</p>
+        <p>None of this requires extreme measures. Consistency in the basics — a daily walk, real food, decent sleep, a conversation with someone who matters — is what the evidence actually rewards.</p>
       </div>
-      <span class="modal-eyebrow" style="margin-top:4px;">Your current focus exercises</span>
-      <div class="focus-list">
-        <div class="focus-item"><div class="focus-icon" style="background:var(--pool-l);">🚶</div><div><div class="focus-name">Daily 15-min walk after dinner</div><div class="focus-desc">Low-impact, back-safe, and the most effective time for blood sugar management. Start here every day.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--wind-l);">🧘</div><div><div class="focus-name">Bird-dog (core stabilizer)</div><div class="focus-desc">2 sets × 10 reps each side. Builds lumbar support without loading the spine. Marcus's #1 priority for your back.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--glow-l);">🏊</div><div><div class="focus-name">Pool walking or swimming</div><div class="focus-desc">2× per week when possible. Water removes spinal load — ideal for building cardio while your back heals.</div></div></div>
-        <div class="focus-item"><div class="focus-icon" style="background:var(--surface);">🔄</div><div><div class="focus-name">Glute bridges</div><div class="focus-desc">3 sets × 12 reps. Strengthens glutes and hamstrings that support your lower back. Do these before walks.</div></div></div>
-      </div>
-      <div class="modal-sage" style="margin-top:2px;">
-        <div class="ms-from"><div class="ms-av"><div class="ms-dot"></div></div><span class="ms-lbl">Sage · the bigger picture</span></div>
-        <div class="ms-text">Movement after dinner does double duty — it helps your back and <strong>directly improves blood sugar clearance,</strong> which feeds your energy goal too. Marcus and Dr. Osei are coordinating to make sure your exercise plan supports both.</div>
-      </div>
-      <div class="modal-divider"></div>
-      <span class="modal-eyebrow">Milestones</span>
-      <div class="milestone-list">
-        <div class="milestone-item done"><div class="ms-check"><div class="ms-check-mark"></div></div><span class="ms-txt">Complete Marcus's core routine 3× in one week</span></div>
-        <div class="milestone-item done"><div class="ms-check"><div class="ms-check-mark"></div></div><span class="ms-txt">Walk after dinner 5 days in a row</span></div>
-        <div class="milestone-item"><div class="ms-check"></div><span class="ms-txt">Exercise 5 days this week (any combination)</span></div>
-      </div>
+      <div class="popup-stat"><div class="popup-stat-num wind">75–80%</div><div class="popup-stat-label">of your longevity is shaped by daily choices, not genetics</div></div>
+      <div class="popup-cta">Ready to see what your day is worth? ↓</div>
     </div>
   </div>
-</div>
+  <div class="popup-overlay" id="p3" onclick="closeOnBg(event,'p3')">
+    <div class="popup-box">
+      <button class="popup-close" onclick="closePopup('p3')">✕</button>
+      <div class="popup-title">How small actions add up</div>
+      <div class="popup-body">
+        <p>A 30-minute walk doesn't feel like a major health decision. But at the population level, regular moderate movement reduces all-cause mortality risk by roughly 15–25%.</p>
+        <p>Age Well translates that into something you can feel: about 9 extra life-minutes per day from that one habit. That's around 55 hours per year. Over a decade, roughly 23 extra days of life — from a single daily walk.</p>
+        <p>Now layer on nutrition, sleep, connection, stress management. The math compounds. Age Well makes this visible: not as a promise or prediction, but as an approximate reflection of what the evidence says your daily choices are actually worth.</p>
+      </div>
+      <div class="popup-stat"><div class="popup-stat-num glow">~55 hours/year</div><div class="popup-stat-label">Approximate lifetime earned from a daily 30-minute walk</div></div>
+      <div class="popup-cta">Ready to see what your day is worth? ↓</div>
+    </div>
+  </div>
 
+  <script>
+    function openPopup(id){document.getElementById(id).classList.add('visible');}
+    function closePopup(id){document.getElementById(id).classList.remove('visible');}
+    function closeOnBg(e,id){if(e.target===document.getElementById(id))closePopup(id);}
+    function toggleD(id){document.getElementById(id).classList.toggle('open');}
+    function setPill(pill){
+      var row=pill.closest('.cadence-pills');
+      var col=row.getAttribute('data-color')||'#00A386';
+      row.querySelectorAll('.cpill-dot').forEach(function(d){d.classList.remove('on');d.style.borderColor='';d.innerHTML='';});
+      var dot=pill.querySelector('.cpill-dot');
+      dot.classList.add('on'); dot.style.borderColor=col;
+      dot.innerHTML='<span style="background:'+col+';width:8px;height:8px;border-radius:50%;display:block;"></span>';
+    }
+    var MAX={move:9,mind:5,live:2,connect:4};
+    function computeTotals(){
+      var t={move:0,mind:0,live:0,connect:0};
+      document.querySelectorAll('.chk').forEach(function(el){
+        var d=el.getAttribute('data-d'),v=parseFloat(el.getAttribute('data-v'))||0;
+        if(d&&el.classList.contains('on'))t[d]+=v;
+      });
+      return t;
+    }
+    function applyTotals(t,animate){
+      var grand=0;
+      var domInfo={move:{c:'#00A386'},mind:{c:'#0093BF'},live:{c:'#052C22'},connect:{c:'#c47f00',bar:'#FAAE3C'}};
+      Object.keys(t).forEach(function(d){
+        var val=t[d]; grand+=val;
+        var pct=Math.min(100,Math.round((val/MAX[d])*100));
+        var display=val>0?'~'+Math.round(val):'—';
+        var mmEl=document.getElementById('mm-'+d);
+        mmEl.childNodes[0].textContent=display+' ';
+        if(animate)mmEl.classList.add('sync-flash');
+        document.getElementById('db-'+d).style.width=pct+'%';
+        document.getElementById('top-bar-'+d).style.width=pct+'%';
+        var tv=document.getElementById('top-val-'+d);
+        tv.textContent=val>0?'~'+Math.round(val)+' min':'— min';
+        tv.style.color=val>0?domInfo[d].c:'#D3DAE5';
+      });
+      var heroEl=document.getElementById('hero-total');
+      heroEl.textContent='~'+Math.round(grand);
+      if(animate)heroEl.classList.add('sync-flash');
+      if(animate)setTimeout(function(){document.querySelectorAll('.sync-flash').forEach(function(el){el.classList.remove('sync-flash');});},700);
+    }
+    function syncCheckin(){
+      var btn=document.getElementById('checkin-btn');
+      var icon=document.getElementById('sync-icon');
+      btn.classList.add('syncing'); icon.style.animation='spin 0.6s linear'; btn.disabled=true;
+      setTimeout(function(){
+        applyTotals(computeTotals(),true);
+        btn.classList.remove('syncing'); icon.style.animation=''; btn.disabled=false;
+        document.getElementById('checkin-timestamp').innerHTML='<i class="ti ti-clock" style="font-size:12px;vertical-align:-1px;margin-right:3px;"></i>Last check-in: just now';
+      },600);
+    }
+    document.querySelectorAll('.chk').forEach(function(el){
+      el.addEventListener('click',function(e){
+        e.stopPropagation();
+        var col=this.getAttribute('data-color')||'#00A386';
+        this.classList.toggle('on');
+        if(this.classList.contains('on')){this.style.background=col;this.style.borderColor=col;this.style.color='#fff';this.textContent='✓';}
+        else{this.style.background='transparent';this.style.borderColor='#D3DAE5';this.style.color='transparent';this.textContent='';}
+      });
+    });
+    applyTotals(computeTotals(),false);
+  </script>
 </body>
 </html>
